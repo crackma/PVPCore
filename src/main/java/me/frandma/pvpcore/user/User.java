@@ -8,14 +8,14 @@ import java.util.UUID;
 public class User {
 
     @Getter
-    private UUID uuid;
+    private UUID uniqueId;
 
     @Getter
     @Setter
     private Stats stats;
 
-    public User(UUID uuid, Stats stats) {
-        this.uuid = uuid;
+    public User(UUID uniqueId, Stats stats) {
+        this.uniqueId = uniqueId;
         this.stats = stats;
     }
 }

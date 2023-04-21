@@ -34,68 +34,72 @@ public class UserDatabase {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
+    public CompletableFuture<Void> insertOrIgnoreUser(UUID uuid) {
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid FROM users WHERE uuid = ?;")) {
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.execute();
 
-    public static void createUser(UUID uuid) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR IGNORE INTO users (uuid,kills,deaths,gems) VALUES (?,?,?,?);")) {
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.setInt(2, 0);
-            preparedStatement.setInt(3, 0);
-            preparedStatement.setInt(4, 0);
-        } catch (SQLException exception) {
-            Bukkit.getLogger().severe(exception.toString());
-        }
-    }
+                if (preparedStatement.getResultSet().getString(1) != null) return null;
 
-    private static ResultSet getResultSet(UUID e) {
-        Bukkit.getLogger().info("getresultset");
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, gems FROM users WHERE uuid = ?")) {
-            return preparedStatement.getResultSet();
-        } catch (SQLException exception) {
-            Bukkit.getLogger().severe(exception.toString());
-            return null;
-        }
-    }
-
-    public static Stats getStats(UUID uuid) {
-        Bukkit.getLogger().info("getstats");
-        Stats stats = new Stats();
-
-        CompletableFuture<ResultSet> future = CompletableFuture.supplyAsync(() -> {
-            ResultSet resultSet = getResultSet(uuid);
-            return resultSet;
-        });
-
-        future.exceptionally(error -> {
-            error.printStackTrace();
-            return null;
-        });
-
-        future.thenAccept(data -> {
-            try {
-                stats.setKills(data.getInt(1));
-                stats.setDeaths(data.getInt(2));
-                stats.setGems(data.getInt(3));
             } catch (SQLException exception) {
-                Bukkit.getLogger().severe(exception.toString());
+                exception.printStackTrace();
+            }
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (uuid,kills,deaths,gems) VALUES (?,?,?,?);")) {
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.setInt(2, 0);
+                preparedStatement.setInt(3, 0);
+                preparedStatement.setInt(4, 0);
+                preparedStatement.execute();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+            return null;
+        });
+        future.exceptionally(exception -> {
+            exception.printStackTrace();
+            return null;
+        });
+        return future;
+    }
+
+    public CompletableFuture<Stats> fetchStats(UUID uuid) {
+        CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, gems FROM users WHERE uuid = ?")) {
+                preparedStatement.setString(1, uuid.toString());
+                ResultSet rs = preparedStatement.getResultSet();
+                Stats stats = new Stats(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+                return stats;
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+                return null;
             }
         });
-        return stats;
+        future.exceptionally(exception -> {
+            exception.printStackTrace();
+            return null;
+        });
+        return future;
     }
 
-    public void updateStats(User user) {
-        try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET kills = ?, deaths = ?, gems = ? WHERE uuid = ?")) {
-            statement.setInt(1, user.getStats().getKills() + 1);
-            statement.setInt(2, user.getStats().getDeaths() + 1);
-            statement.setInt(2, user.getStats().getGems() + 1);
-            statement.setString(4, user.getUuid().toString());
-            statement.executeUpdate();
-        } catch (SQLException exception) {
-            Bukkit.getLogger().severe(exception.toString());
-        }
+    public CompletableFuture<Void> updateStats(User user) {
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET kills = ?, deaths = ?, gems = ? WHERE uuid = ?")) {
+                statement.setInt(1, user.getStats().getKills());
+                statement.setInt(2, user.getStats().getDeaths());
+                statement.setInt(3, user.getStats().getGems());
+                statement.setString(4, user.getUniqueId().toString());
+                statement.executeUpdate();
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+            return null;
+        });
+        future.exceptionally(exception -> {
+            exception.printStackTrace();
+            return null;
+        });
+        return future;
     }
-
 }
 

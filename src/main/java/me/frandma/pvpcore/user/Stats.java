@@ -20,11 +20,6 @@ public class Stats {
         this.deaths = deaths;
         this.gems = gems;
     }
-    public Stats() {
-        this.kills = 0;
-        this.deaths = 0;
-        this.gems = 0;
-    }
 
     public String toString() {
         return kills + ", " + deaths + ", " + gems;
