@@ -5,3 +5,8 @@ api-version: 1.19
 commands:
   stats:
     description: View players' stats.
+  editstats:
+    usage: §c/editstats <player> <kills> <deaths> <streak> <gems>
+    permission: pvpcore.editstats
+    permission-message: §cYou cannot do that.
+    description: Edit players' stats.

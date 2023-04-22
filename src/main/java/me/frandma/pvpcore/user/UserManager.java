@@ -25,4 +25,8 @@ public class UserManager {
         }
         return null;
     }
+
+    public List<User> getUserList() {
+        return userList;
+    }
 }
