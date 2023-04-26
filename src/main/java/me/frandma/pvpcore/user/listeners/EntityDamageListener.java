@@ -1,6 +1,5 @@
-package me.frandma.pvpcore.listeners;
+package me.frandma.pvpcore.user.listeners;
 
-import me.frandma.pvpcore.PVPCore;
 import me.frandma.pvpcore.user.Stats;
 import me.frandma.pvpcore.user.User;
 import me.frandma.pvpcore.user.UserDatabase;
@@ -76,15 +75,13 @@ public class EntityDamageListener implements Listener {
             victim.removePotionEffect(effect.getType());
         }
 
-        UserDatabase userDatabase = PVPCore.getUserDatabase();
-
         attackerUser = victimUser.getLastAttacker();
         attacker = attackerUser.getPlayer();
 
         Stats victimStats = victimUser.getStats();
         victim.sendMessage(attackerUser == null ? "§eYou died." : "§eYou were killed by §d" + attackerUser.getPlayer().getName() + "§e.");
         victimUser.setStats(new Stats(victimStats.getKills(), victimStats.getDeaths() + 1, 0, victimStats.getGems()));
-        userDatabase.updateStats(victimUser);
+        UserDatabase.updateStats(victimUser);
 
         if (attackerUser == victimUser || attackerUser == null) return;
 
@@ -92,7 +89,7 @@ public class EntityDamageListener implements Listener {
         attackerUser.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3));
         attacker.sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");
         if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + attacker.getName() + " §eis on a streak of §d" + attackerStats.getStreak() + "§e.");
-        userDatabase.updateStats(attackerUser);
+        UserDatabase.updateStats(attackerUser);
 
         List<User> attackerList = victimUser.getAllAttackers();
         if (attackerList == null) return;
@@ -100,7 +97,7 @@ public class EntityDamageListener implements Listener {
             if (assistantUser == victimUser.getLastAttacker()) continue;
             assistantUser.getStats().setGems(assistantUser.getStats().getGems() + 1);
             assistantUser.getPlayer().sendMessage("§eYou assisted the kill of §d" + victim.getName() + " §eand got §d1 gem§e.");
-            userDatabase.updateStats(assistantUser);
+            UserDatabase.updateStats(assistantUser);
         }
         victimUser.clearAttackers();
     }

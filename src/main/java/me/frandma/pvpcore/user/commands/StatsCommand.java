@@ -1,4 +1,4 @@
-package me.frandma.pvpcore.commands;
+package me.frandma.pvpcore.user.commands;
 
 import me.frandma.pvpcore.PVPCore;
 import me.frandma.pvpcore.user.Stats;
@@ -10,18 +10,33 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class StatsCommand implements CommandExecutor {
+public class StatsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        switch (args.length) {
+            case 0:
+                if (!(sender instanceof Player)) {
+                    return false;
+                }
+
+                Player player = (Player) sender;
+                User user = UserManager.getUser(player.getUniqueId());
+                Stats stats = user.getStats();
+
+                sender.sendMessage(statsMessage(stats));
+                return true;
+        }
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage("Provide some more arguments.");
-                return true;
+                return false;
             }
 
             Player player = (Player) sender;
@@ -34,7 +49,6 @@ public class StatsCommand implements CommandExecutor {
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         UUID uuid = player.getUniqueId();
-        sender.sendMessage(uuid.toString());
 
         if (UserManager.exists(uuid)) {
             User user = UserManager.getUser(uuid);
@@ -56,6 +70,29 @@ public class StatsCommand implements CommandExecutor {
 
         return true;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String alias, String[] args) {
+        List<String> completions = new ArrayList<>();
+        switch (args.length) {
+            case 1:
+                UserManager.getUserList().forEach(user -> completions.add(user.getPlayer().getName()));
+                break;
+            case 2:
+                completions.add("<kills>");
+                break;
+            case 3:
+                completions.add("<deaths>");
+                break;
+            case 4:
+                completions.add("<streak>");
+                break;
+            case 5:
+                completions.add("<gems>");
+        }
+        return completions;
+    }
+
     private String statsMessage(Stats stats) {
         return "Kills: " + stats.getKills() + "\n" +
                 "Deaths: " + stats.getDeaths() + "\n" +

@@ -1,4 +1,4 @@
-package me.frandma.pvpcore.listeners;
+package me.frandma.pvpcore.user.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

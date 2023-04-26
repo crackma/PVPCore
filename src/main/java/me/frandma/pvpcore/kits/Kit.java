@@ -2,6 +2,8 @@ package me.frandma.pvpcore.kits;
 
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -19,12 +21,22 @@ public class Kit {
     @Getter
     private ItemStack[] items;
 
+    @Getter
+    private Material displayItem;
+
+    @Getter
+    private int inventoryPosition;
+
     public Kit(String name, Material displayItem, int inventoryPosition, ItemStack[] items) {
         this.name = name;
         this.items = items;
+        this.displayItem = displayItem;
+        this.inventoryPosition = inventoryPosition;
     }
     public Kit(String name, Material displayItem, int inventoryPosition, String base64) {
         this.name = name;
+        this.displayItem = displayItem;
+        this.inventoryPosition = inventoryPosition;
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
@@ -48,8 +60,8 @@ public class Kit {
 
             dataOutput.writeInt(items.length);
 
-            for (int i = 0; i < items.length; i++) {
-                dataOutput.writeObject(items[i]);
+            for (ItemStack item : items) {
+                dataOutput.writeObject(item);
             }
 
             dataOutput.close();
@@ -57,6 +69,18 @@ public class Kit {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void giveTo(HumanEntity player) {
+        for (ItemStack item : items) {
+            if (item == null) continue;
+            //-1 is returned by #firstEmpty() when an inventory is full
+            if (player.getInventory().firstEmpty() == -1) {
+                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                continue;
+            }
+            player.getInventory().addItem(item);
         }
     }
 }

@@ -1,6 +1,5 @@
 package me.frandma.pvpcore.user;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.frandma.pvpcore.PVPCore;
 import org.bukkit.Bukkit;
 
@@ -36,7 +35,7 @@ public class UserDatabase {
         }
     }
 
-    public CompletableFuture<Boolean> exists(UUID uuid) {
+    public static CompletableFuture<Boolean> exists(UUID uuid) {
         CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid FROM users WHERE uuid = ?;")) {
                 preparedStatement.setString(1, uuid.toString());
@@ -54,7 +53,7 @@ public class UserDatabase {
         return future;
     }
 
-    public CompletableFuture<Void> insertOrIgnoreUser(UUID uuid) {
+    public static CompletableFuture<Void> insertOrIgnoreUser(UUID uuid) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid FROM users WHERE uuid = ?;")) {
                 preparedStatement.setString(1, uuid.toString());
@@ -84,7 +83,7 @@ public class UserDatabase {
         return future;
     }
 
-    public CompletableFuture<Stats> fetchStats(UUID uuid) {
+    public static CompletableFuture<Stats> fetchStats(UUID uuid) {
         CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, streak, gems FROM users WHERE uuid = ?")) {
                 preparedStatement.setString(1, uuid.toString());
@@ -103,7 +102,7 @@ public class UserDatabase {
         return future;
     }
 
-    public CompletableFuture<Void> updateStats(User user) {
+    public static CompletableFuture<Void> updateStats(User user) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET kills = ?, deaths = ?, streak = ?, gems = ? WHERE uuid = ?")) {
                 statement.setInt(1, user.getStats().getKills());

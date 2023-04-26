@@ -3,10 +3,24 @@ version: '${project.version}'
 main: me.frandma.pvpcore.PVPCore
 api-version: 1.19
 commands:
+  createkit:
+    description: Create kits.
+    usage: §c/createkit <kit_name> <displayItem> <inventoryPosition>
+    permission: pvpcore.managekits
+    permission-message: §cYou cannot do that.
+  deletekit:
+    description: Delete kits.
+    usage: §c/deletekit <kit_name>
+    permission: pvpcore.managekits
+    permission-message: §cYou cannot do that.
+  kit:
+    description: Claim kits.
+    usage: §c/kit <kit_name> [player]
   stats:
     description: View players' stats.
+    usage: §c/stats [player]
   editstats:
+    description: Edit players' stats.
     usage: §c/editstats <player> <kills> <deaths> <streak> <gems>
     permission: pvpcore.editstats
     permission-message: §cYou cannot do that.
-    description: Edit players' stats.

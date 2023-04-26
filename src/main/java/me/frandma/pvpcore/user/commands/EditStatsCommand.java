@@ -1,8 +1,8 @@
-package me.frandma.pvpcore.commands;
+package me.frandma.pvpcore.user.commands;
 
-import me.frandma.pvpcore.PVPCore;
 import me.frandma.pvpcore.user.Stats;
 import me.frandma.pvpcore.user.User;
+import me.frandma.pvpcore.user.UserDatabase;
 import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -20,17 +20,17 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 5) return false;
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-        if (player == null) return false;
         User user = UserManager.getUser(player.getUniqueId());
+        if (user == null) return false;
         Stats stats = user.getStats();
         try {
             stats.setKills(Integer.parseInt(args[1]));
             stats.setDeaths(Integer.parseInt(args[2]));
             stats.setStreak(Integer.parseInt(args[3]));
             stats.setGems(Integer.parseInt(args[4]));
-            PVPCore.getUserDatabase().updateStats(user).thenAccept(nothing -> sender.sendMessage("updated stats of " + player.getName() + " to " + stats));
+            UserDatabase.updateStats(user).thenAccept(nothing -> sender.sendMessage("updated stats of " + player.getName() + " to " + stats));
         } catch (NumberFormatException e) {
-            sender.sendMessage("§cYou must use integer values.");
+            return false;
         }
         return true;
     }

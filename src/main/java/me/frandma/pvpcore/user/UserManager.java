@@ -1,15 +1,15 @@
 package me.frandma.pvpcore.user;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @UtilityClass
 public class UserManager {
 
-    private List<User> userList = new ArrayList<>();
+    @Getter
+    private Set<User> userList = new HashSet<>();
 
     public void addUser(UUID uuid, Stats stats) {
         userList.add(new User(uuid, stats));
@@ -24,9 +24,5 @@ public class UserManager {
             if (user.getUniqueId() == uuid) return user;
         }
         return null;
-    }
-
-    public List<User> getUserList() {
-        return userList;
     }
 }
