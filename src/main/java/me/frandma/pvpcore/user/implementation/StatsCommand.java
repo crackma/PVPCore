@@ -1,6 +1,6 @@
-package me.frandma.pvpcore.user.commands;
+package me.frandma.pvpcore.user.implementation;
 
-import me.frandma.pvpcore.PVPCore;
+import me.frandma.pvpcore.PVPCorePlugin;
 import me.frandma.pvpcore.user.Stats;
 import me.frandma.pvpcore.user.User;
 import me.frandma.pvpcore.user.UserDatabase;
@@ -21,19 +21,6 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        switch (args.length) {
-            case 0:
-                if (!(sender instanceof Player)) {
-                    return false;
-                }
-
-                Player player = (Player) sender;
-                User user = UserManager.getUser(player.getUniqueId());
-                Stats stats = user.getStats();
-
-                sender.sendMessage(statsMessage(stats));
-                return true;
-        }
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
                 return false;
@@ -58,7 +45,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
 
             return true;
         }
-        UserDatabase database = PVPCore.getUserDatabase();
+        UserDatabase database = PVPCorePlugin.getUserDatabase();
 
         database.exists(uuid).thenAccept(bool -> {
             if (!bool) {

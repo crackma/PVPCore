@@ -1,4 +1,4 @@
-package me.frandma.pvpcore.user.listeners;
+package me.frandma.pvpcore.user.implementation;
 
 import me.frandma.pvpcore.user.Stats;
 import me.frandma.pvpcore.user.User;

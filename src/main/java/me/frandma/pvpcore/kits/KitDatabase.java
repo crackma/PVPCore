@@ -1,6 +1,6 @@
 package me.frandma.pvpcore.kits;
 
-import me.frandma.pvpcore.PVPCore;
+import me.frandma.pvpcore.PVPCorePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
@@ -17,7 +17,7 @@ public class KitDatabase {
         try {
             //make the connection
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCore.getInstance().getDataFolder(), "kits.db"));
+            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCorePlugin.getInstance().getDataFolder(), "kits.db"));
 
             //create table
             try (PreparedStatement preparedStatement = connection.prepareStatement(

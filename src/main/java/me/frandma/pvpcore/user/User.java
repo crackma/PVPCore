@@ -21,7 +21,6 @@ public class User {
     @Setter
     private User lastAttacker;
 
-    //all attackers get kill assists, except the killer
     @Getter
     private List<User> allAttackers;
 

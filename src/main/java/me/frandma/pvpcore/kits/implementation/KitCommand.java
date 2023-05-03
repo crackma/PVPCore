@@ -1,5 +1,6 @@
-package me.frandma.pvpcore.kits.commands;
+package me.frandma.pvpcore.kits.implementation;
 
+import me.frandma.pvpcore.gui.GuiManager;
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitManager;
 import org.bukkit.Bukkit;
@@ -21,7 +22,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             case 0:
                 if (!(sender instanceof Player)) return false;
                 player = (Player) sender;
-                player.openInventory(KitManager.getKitInventory());
+                GuiManager.openGUI(new KitGui(), player);
                 return true;
             case 1:
                 if (!(sender instanceof Player)) return false;
@@ -34,6 +35,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             case 2:
                 if (!sender.hasPermission("pvpcore.kit.others")) {
                     sender.sendMessage("§cYou cannot do that.");
+                    return true;
                 }
                 player = Bukkit.getPlayer(args[1]);
                 if (player == null) return false;

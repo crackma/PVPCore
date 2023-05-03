@@ -1,6 +1,6 @@
 package me.frandma.pvpcore.user;
 
-import me.frandma.pvpcore.PVPCore;
+import me.frandma.pvpcore.PVPCorePlugin;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -10,13 +10,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class UserDatabase {
 
-     private static Connection connection;
+    private static Connection connection;
 
     public UserDatabase() {
         try {
             //make the connection
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCore.getInstance().getDataFolder(), "users.db"));
+            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCorePlugin.getInstance().getDataFolder(), "users.db"));
 
             //create table
             try (PreparedStatement preparedStatement = connection.prepareStatement(
@@ -88,8 +88,7 @@ public class UserDatabase {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, streak, gems FROM users WHERE uuid = ?")) {
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet rs = preparedStatement.getResultSet();
-                Stats stats = new Stats(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4));
-                return stats;
+                return new Stats(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4));
             } catch (SQLException exception) {
                 exception.printStackTrace();
                 return null;

@@ -1,4 +1,4 @@
-package me.frandma.pvpcore.kits.commands;
+package me.frandma.pvpcore.kits.implementation;
 
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitDatabase;

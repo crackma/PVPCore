@@ -1,25 +1,25 @@
 package me.frandma.pvpcore;
 
 import lombok.Getter;
-import me.frandma.pvpcore.kits.commands.CreateKitCommand;
-import me.frandma.pvpcore.kits.commands.DeleteKitCommand;
-import me.frandma.pvpcore.kits.commands.KitCommand;
-import me.frandma.pvpcore.user.commands.EditStatsCommand;
-import me.frandma.pvpcore.user.commands.StatsCommand;
+import me.frandma.pvpcore.gui.GuiListener;
 import me.frandma.pvpcore.kits.KitDatabase;
 import me.frandma.pvpcore.kits.KitManager;
-import me.frandma.pvpcore.user.listeners.EntityDamageListener;
-import me.frandma.pvpcore.user.listeners.PlayerJoinListener;
-import me.frandma.pvpcore.user.listeners.PlayerLoginListener;
-import me.frandma.pvpcore.kits.listeners.KitInventoryClickListener;
+import me.frandma.pvpcore.kits.implementation.CreateKitCommand;
+import me.frandma.pvpcore.kits.implementation.DeleteKitCommand;
+import me.frandma.pvpcore.kits.implementation.KitCommand;
 import me.frandma.pvpcore.user.UserDatabase;
+import me.frandma.pvpcore.user.implementation.EditStatsCommand;
+import me.frandma.pvpcore.user.implementation.StatsCommand;
+import me.frandma.pvpcore.user.implementation.EntityDamageListener;
+import me.frandma.pvpcore.user.implementation.PlayerJoinListener;
+import me.frandma.pvpcore.user.implementation.PlayerLoginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PVPCore extends JavaPlugin {
+public final class PVPCorePlugin extends JavaPlugin {
 
     @Getter
-    private static PVPCore instance;
+    private static PVPCorePlugin instance;
 
     @Getter
     private static UserDatabase userDatabase;
@@ -36,6 +36,7 @@ public final class PVPCore extends JavaPlugin {
         userDatabase = new UserDatabase();
         kitDatabase = new KitDatabase();
         KitManager.init();
+
 
         registerListeners();
         registerCommands();
@@ -55,7 +56,8 @@ public final class PVPCore extends JavaPlugin {
     }
 
     private void registerListeners() {
-        Bukkit.getPluginManager().registerEvents(new KitInventoryClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
+
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(), this);

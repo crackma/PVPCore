@@ -1,6 +1,6 @@
 name: PVPCore
 version: '${project.version}'
-main: me.frandma.pvpcore.PVPCore
+main: me.frandma.pvpcore.PVPCorePlugin
 api-version: 1.19
 commands:
   createkit:

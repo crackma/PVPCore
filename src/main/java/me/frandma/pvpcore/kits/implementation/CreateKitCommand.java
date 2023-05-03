@@ -1,6 +1,6 @@
-package me.frandma.pvpcore.kits.commands;
+package me.frandma.pvpcore.kits.implementation;
 
-import me.frandma.pvpcore.PVPCore;
+import me.frandma.pvpcore.PVPCorePlugin;
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitDatabase;
 import me.frandma.pvpcore.kits.KitManager;
@@ -28,7 +28,7 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
         }
         try {
             Kit kit = new Kit(args[0], Material.valueOf(args[1]), Integer.parseInt(args[2]), items);
-            KitDatabase kitDatabase = PVPCore.getKitDatabase();
+            KitDatabase kitDatabase = PVPCorePlugin.getKitDatabase();
             kitDatabase.insertKit(kit).thenAccept(data -> {
                 KitManager.addKit(kit);
                 player.sendMessage("§eCreated kit §d" + args[0] + "§e.");
