@@ -1,6 +1,7 @@
 package me.frandma.pvpcore.gui;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class GuiManager {
     private Map<Inventory, Gui> guiMap = new HashMap<>();
 
-    public void openGUI(Gui gui, Player player) {
+    public void openGUI(Gui gui, HumanEntity player) {
         Inventory inventory = gui.getInventory();
         addGui(inventory, gui);
         player.openInventory(inventory);

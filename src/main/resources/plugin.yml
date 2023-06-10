@@ -5,7 +5,7 @@ api-version: 1.19
 commands:
   createkit:
     description: Create kits.
-    usage: §c/createkit <kit_name> <displayItem> <inventoryPosition>
+    usage: §c/createkit <kit_name> <display_item> <inventoryPosition>
     permission: pvpcore.managekits
     permission-message: §cYou cannot do that.
   deletekit:
@@ -16,6 +16,14 @@ commands:
   kit:
     description: Claim kits.
     usage: §c/kit <kit_name> [player]
+  category:
+    description: Edit the categories of the shop
+    usage: §c/category help
+    permission: pvpcore.editcategories
+    permission-message: §cYou cannot do that.
+  shop:
+    description: Buy items.
+    usage: §c/shop
   stats:
     description: View players' stats.
     usage: §c/stats [player]

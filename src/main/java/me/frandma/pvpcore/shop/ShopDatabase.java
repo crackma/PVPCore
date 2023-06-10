@@ -1,29 +1,32 @@
-package me.frandma.pvpcore.kits;
+package me.frandma.pvpcore.shop;
 
 import me.frandma.pvpcore.PVPCorePlugin;
+import me.frandma.pvpcore.kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class KitDatabase {
-
+public class ShopDatabase {
     private static Connection connection;
 
-    public KitDatabase() {
+    public ShopDatabase() {
         try {
             //make the connection
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCorePlugin.getInstance().getDataFolder(), "kits.db"));
+            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCorePlugin.getInstance().getDataFolder(), "shop.db"));
 
             //create table
             try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS kits(" +
+                    "CREATE TABLE IF NOT EXISTS shop(" +
                             "name varchar(36) NOT NULL," +
+                            "description varchar(255) NOT NULL," +
                             "displayItem varchar(36) NOT NULL," +
                             "inventorySlot int NOT NULL," +
                             "items varchar(255) NOT NULL);"
@@ -36,13 +39,14 @@ public class KitDatabase {
         }
     }
 
-    public static CompletableFuture<Void> insertKit(Kit kit) {
+    public static CompletableFuture<Void> insertCategory(Category category) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO kits (name, displayItem, inventorySlot, items) VALUES (?,?,?,?);")) {
-                preparedStatement.setString(1, kit.getName());
-                preparedStatement.setString(2, kit.getDisplayItem().toString());
-                preparedStatement.setInt(3, kit.getInventorySlot());
-                preparedStatement.setString(4, kit.toBase64());
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO shop (name, description, displayItem, inventorySlot, items) VALUES (?,?,?,?,?);")) {
+                preparedStatement.setString(1, category.getName());
+                preparedStatement.setString(2, category.getDescription());
+                preparedStatement.setString(3, category.getDisplayItem().toString());
+                preparedStatement.setInt(4, category.getInventorySlot());
+                preparedStatement.setString(5, category.toBase64());
                 preparedStatement.execute();
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -56,10 +60,10 @@ public class KitDatabase {
         return future;
     }
 
-    public static CompletableFuture<Void> deleteKit(String kitName) {
+    public static CompletableFuture<Void> deleteCategory(String categoryName) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM kits WHERE name = ?;")) {
-                preparedStatement.setString(1, kitName);
+            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM shop WHERE name = ?;")) {
+                preparedStatement.setString(1, categoryName);
                 preparedStatement.execute();
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -73,17 +77,17 @@ public class KitDatabase {
         return future;
     }
 
-    protected static CompletableFuture<List<Kit>> fetchKits() {
-        CompletableFuture<List<Kit>> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, displayItem, inventorySlot, items FROM kits;")) {
+    protected static CompletableFuture<Set<Category>> fetchCategories() {
+        CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, description, displayItem, inventorySlot, items FROM shop;")) {
                 preparedStatement.execute();
                 ResultSet rs = preparedStatement.getResultSet();
-                List<Kit> kitList = new ArrayList<>();
+                Set<Category> categorySet = new HashSet<>();
                 while (rs.next()) {
-                    Kit kit = new Kit(rs.getString(1), Material.valueOf(rs.getString(2)), rs.getInt(3), rs.getString(4));
-                    kitList.add(kit);
+                    Category category = new Category(rs.getString(1), rs.getString(2), Material.valueOf(rs.getString(3)), rs.getInt(4), rs.getString(5));
+                    categorySet.add(category);
                 }
-                return kitList;
+                return categorySet;
             } catch (SQLException exception) {
                 exception.printStackTrace();
                 return null;

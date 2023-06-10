@@ -7,16 +7,7 @@ public class Stats {
 
     @Getter
     @Setter
-    private int kills;
-    @Getter
-    @Setter
-    private int deaths;
-    @Getter
-    @Setter
-    private int streak;
-    @Getter
-    @Setter
-    private int gems;
+    private int kills, deaths, streak, gems;
 
     public Stats(int kills, int deaths, int streak, int gems) {
         this.kills = kills;

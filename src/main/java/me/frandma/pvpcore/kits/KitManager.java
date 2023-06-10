@@ -2,12 +2,6 @@ package me.frandma.pvpcore.kits;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +10,7 @@ import java.util.Set;
 public class KitManager {
 
     @Getter
-        private Set<Kit> kitSet = new HashSet<>();
+    private Set<Kit> kitSet = new HashSet<>();
 
     public void init() {
         KitDatabase.fetchKits().thenAccept(kits -> {

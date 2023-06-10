@@ -1,9 +1,8 @@
-package me.frandma.pvpcore.kits;
+package me.frandma.pvpcore.shop;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -11,40 +10,47 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class Kit {
+public class Category {
 
     @Getter
     private final String name;
-
     @Getter
-    private ItemStack[] items;
-
+    @Setter
+    private String description;
     @Getter
+    @Setter
     private Material displayItem;
-
     @Getter
+    @Setter
     private int inventorySlot;
 
-    public Kit(String name, Material displayItem, int inventoryPosition, ItemStack[] items) {
+    private ArrayList<CategoryItem> items = new ArrayList<>();
+
+    public Category(String name, String description, Material displayItem, int inventorySlot) {
         this.name = name;
-        this.items = items;
+        this.description = description;
         this.displayItem = displayItem;
-        this.inventorySlot = inventoryPosition;
+        this.inventorySlot = inventorySlot;
     }
-    public Kit(String name, Material displayItem, int inventoryPosition, String base64) {
+
+    public Category(String name, String description, Material displayItem, int inventorySlot, String base64) {
         this.name = name;
+        this.description = description;
         this.displayItem = displayItem;
-        this.inventorySlot = inventoryPosition;
+        this.inventorySlot = inventorySlot;
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack[] items = new ItemStack[dataInput.readInt()];
+            CategoryItem[] items = new CategoryItem[dataInput.readInt()];
             for (int i = 0; i < items.length; i++) {
-                items[i] = (ItemStack) dataInput.readObject();
+                items[i] = (CategoryItem) dataInput.readObject();
             }
             dataInput.close();
-            this.items = items;
+            this.items = Arrays.asList(items);
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             this.items = null;
@@ -56,9 +62,9 @@ public class Kit {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
-            dataOutput.writeInt(items.length);
+            dataOutput.writeInt(getItems().length);
 
-            for (ItemStack item : items) {
+            for (CategoryItem item : items) {
                 dataOutput.writeObject(item);
             }
 
@@ -70,15 +76,19 @@ public class Kit {
         }
     }
 
-    public void giveTo(HumanEntity player) {
-        for (ItemStack item : items) {
-            if (item == null) continue;
-            //-1 is returned by #firstEmpty() when an inventory is full
-            if (player.getInventory().firstEmpty() == -1) {
-                player.getWorld().dropItemNaturally(player.getLocation(), item);
-                continue;
-            }
-            player.getInventory().addItem(item);
+    public void addItem(CategoryItem item) {
+        items.add(item);
+    }
+
+    public CategoryItem[] getItems() {
+        return items.toArray(new CategoryItem[items.size()]);
+    }
+
+    public void removeItem(String name) {
+        name = name.toLowerCase();
+        for (CategoryItem item : items) {
+            String categoryName = item.getName().toLowerCase();
+            if (categoryName.equals(name)) items.remove(item);
         }
     }
 }

@@ -29,8 +29,8 @@ public class KitGui extends Gui {
         itemMeta.setLore(null);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
-        this.addButton(kit.getInventoryPosition(), new GuiButton().
-                creator(unused -> new ItemStack(kit.getDisplayItem())).
+        this.addButton(kit.getInventorySlot(), new GuiButton().
+                creator(unused -> itemStack).
                 consumer(event -> kit.giveTo(event.getWhoClicked())));
         super.decorate();
     }
