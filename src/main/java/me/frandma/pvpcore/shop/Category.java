@@ -28,7 +28,7 @@ public class Category {
     @Setter
     private int inventorySlot;
 
-    private ArrayList<CategoryItem> items = new ArrayList<>();
+    private List<CategoryItem> items = new ArrayList<>();
 
     public Category(String name, String description, Material displayItem, int inventorySlot) {
         this.name = name;
