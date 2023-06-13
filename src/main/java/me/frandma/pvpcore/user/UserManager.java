@@ -2,7 +2,6 @@ package me.frandma.pvpcore.user;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
-import org.bukkit.Bukkit;
 
 import java.util.*;
 
@@ -11,6 +10,8 @@ public class UserManager {
 
     @Getter
     private Map<UUID, User> userMap = new HashMap<>();
+
+    private List<User> userList = new ArrayList<>();
 
     public void addUser(User user) {
         userMap.put(user.getUniqueId(), user);
@@ -21,13 +22,6 @@ public class UserManager {
     }
 
     public User getUser(UUID uuid) {
-        for (Map.Entry<UUID, User> set : userMap.entrySet()) {
-            if (set.getKey() == uuid) {
-                Bukkit.broadcastMessage("yay");
-                return set.getValue();
-            }
-        }
-        Bukkit.broadcastMessage("nay");
-        return null;
+        return userMap.get(uuid);
     }
 }
