@@ -39,7 +39,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 material = Material.valueOf(args[2]);
-                if (material == null) return false;
+                if (material.equals(Material.AIR)) return false;
                 description = convertArray(args, " ", 4);
                 try {
                     category = new Category(args[1], description, Material.valueOf(args[2]), Integer.parseInt(args[3]));
@@ -58,7 +58,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 switch (args[2].toLowerCase()) {
                     case "displayitem":
                         material = Material.valueOf(args[2]);
-                        if (material == null) return false;
+                        if (material.equals(Material.AIR)) return false;
                         category.setDisplayItem(material);
                         sender.sendMessage("§eUpdated §d" + args[1] + "'s§e display item to §d" + args[3] + "§e.");
                     case "inventoryslot":
@@ -72,7 +72,6 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                         category.setDescription(convertArray(args, " ", 3));
                         sender.sendMessage("§eUpdated §d" + args[1] + "'s§e description.");
                 }
-                description = convertArray(args, " ", 4);
                 return true;
             //category addItem <categoryName> <itemName> <inventorySlot> <price> (hold an item)
             case "additem":

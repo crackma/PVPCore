@@ -9,19 +9,19 @@ import java.util.*;
 public class UserManager {
 
     @Getter
-    private Set<User> userList = new HashSet<>();
+    private Map<UUID, User> userMap = new HashMap<>();
 
-    public void addUser(UUID uuid, Stats stats) {
-        userList.add(new User(uuid, stats));
+    public void addUser(User user) {
+        userMap.put(user.getUniqueId(), user);
     }
 
     public boolean exists(UUID uuid) {
-        return userList.contains(uuid);
+        return userMap.containsKey(uuid);
     }
 
     public User getUser(UUID uuid) {
-        for (User user : userList) {
-            if (user.getUniqueId() == uuid) return user;
+        for (Map.Entry<UUID, User> set : userMap.entrySet()) {
+            if (set.getKey() == uuid) return set.getValue();
         }
         return null;
     }

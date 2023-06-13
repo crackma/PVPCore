@@ -5,11 +5,7 @@ import me.frandma.pvpcore.gui.Gui;
 import me.frandma.pvpcore.gui.GuiButton;
 import me.frandma.pvpcore.shop.Category;
 import me.frandma.pvpcore.shop.CategoryItem;
-import me.frandma.pvpcore.user.User;
-import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +16,7 @@ import java.util.List;
 
 public class CategoryGui extends Gui {
 
-    private Category category;
+    private final Category category;
 
     public CategoryGui(Category category) {
         super();

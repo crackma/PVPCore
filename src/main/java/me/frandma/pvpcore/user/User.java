@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class User {
     private User lastAttacker;
 
     @Getter
-    private List<User> allAttackers;
+    private List<User> allAttackers = new ArrayList<>();
 
     public User(UUID uniqueId, Stats stats) {
         this.uniqueId = uniqueId;

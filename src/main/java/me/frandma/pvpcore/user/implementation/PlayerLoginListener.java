@@ -1,5 +1,6 @@
 package me.frandma.pvpcore.user.implementation;
 
+import me.frandma.pvpcore.user.User;
 import me.frandma.pvpcore.user.UserDatabase;
 import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.event.EventHandler;
@@ -16,7 +17,7 @@ public class PlayerLoginListener implements Listener {
         UserDatabase.insertOrIgnoreUser(uuid);
 
         UserDatabase.fetchStats(uuid).thenAccept(stats -> {
-            if (!UserManager.exists(uuid)) UserManager.addUser(uuid, stats);
+            if (!UserManager.exists(uuid)) UserManager.addUser(new User(uuid, stats));
         });
     }
 }

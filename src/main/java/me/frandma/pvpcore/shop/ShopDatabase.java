@@ -1,15 +1,12 @@
 package me.frandma.pvpcore.shop;
 
 import me.frandma.pvpcore.PVPCorePlugin;
-import me.frandma.pvpcore.kits.Kit;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 

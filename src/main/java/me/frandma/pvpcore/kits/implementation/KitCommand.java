@@ -3,7 +3,6 @@ package me.frandma.pvpcore.kits.implementation;
 import me.frandma.pvpcore.gui.GuiManager;
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitManager;
-import me.frandma.pvpcore.user.UserDatabase;
 import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
