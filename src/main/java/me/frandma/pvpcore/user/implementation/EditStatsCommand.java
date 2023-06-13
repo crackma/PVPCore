@@ -13,6 +13,8 @@ import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class EditStatsCommand implements CommandExecutor, TabCompleter {
 
@@ -40,7 +42,7 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                UserManager.getUserList().forEach(user -> completions.add(user.getPlayer().getName()));
+                for (Map.Entry<UUID, User> set : UserManager.getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");
