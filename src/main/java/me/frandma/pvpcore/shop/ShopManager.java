@@ -30,4 +30,8 @@ public class ShopManager {
         }
         return null;
     }
+
+    public void deleteCategory(Category category) {
+        categorySet.remove(category);
+    }
 }

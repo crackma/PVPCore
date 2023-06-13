@@ -28,6 +28,7 @@ public class Category {
     @Setter
     private int inventorySlot;
 
+    @Getter
     private List<CategoryItem> items = new ArrayList<>();
 
     public Category(String name, String description, Material displayItem, int inventorySlot) {
@@ -45,12 +46,11 @@ public class Category {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            CategoryItem[] items = new CategoryItem[dataInput.readInt()];
-            for (int i = 0; i < items.length; i++) {
-                items[i] = (CategoryItem) dataInput.readObject();
+            int readInt = dataInput.readInt();
+            for (int i = 0; i < readInt; i++) {
+                items.add((CategoryItem) dataInput.readObject());
             }
             dataInput.close();
-            this.items = Arrays.asList(items);
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             this.items = null;
@@ -62,7 +62,7 @@ public class Category {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
-            dataOutput.writeInt(getItems().length);
+            dataOutput.writeInt(items.size());
 
             for (CategoryItem item : items) {
                 dataOutput.writeObject(item);
@@ -78,10 +78,6 @@ public class Category {
 
     public void addItem(CategoryItem item) {
         items.add(item);
-    }
-
-    public CategoryItem[] getItems() {
-        return items.toArray(new CategoryItem[items.size()]);
     }
 
     public void removeItem(String name) {

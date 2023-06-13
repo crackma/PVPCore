@@ -25,7 +25,8 @@ public class UserDatabase {
                             "kills int NOT NULL," +
                             "deaths int NOT NULL," +
                             "streak int NOT NULL," +
-                            "gems int NOT NULL);"
+                            "gems int NOT NULL," +
+                            "kitCooldowns varchar(255));"
             ))
             {
                 preparedStatement.execute();
@@ -64,7 +65,7 @@ public class UserDatabase {
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (uuid,kills,deaths,streak,gems) VALUES (?,?,?,?,?);")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users (uuid,kills,deaths,streak,gems,kitCooldowns) VALUES (?,?,?,?,?,?);")) {
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.setInt(2, 0);
                 preparedStatement.setInt(3, 0);
@@ -85,10 +86,10 @@ public class UserDatabase {
 
     public static CompletableFuture<Stats> fetchStats(UUID uuid) {
         CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, streak, gems FROM users WHERE uuid = ?")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT kills, deaths, streak, gems, kitCooldowns FROM users WHERE uuid = ?")) {
                 preparedStatement.setString(1, uuid.toString());
                 ResultSet rs = preparedStatement.getResultSet();
-                return new Stats(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4));
+                return new Stats(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getInt(4), rs.getString(5));
             } catch (SQLException exception) {
                 exception.printStackTrace();
                 return null;
@@ -103,12 +104,13 @@ public class UserDatabase {
 
     public static CompletableFuture<Void> updateStats(User user) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET kills = ?, deaths = ?, streak = ?, gems = ? WHERE uuid = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("UPDATE users SET kills = ?, deaths = ?, streak = ?, gems = ?, kitCooldowns = ? WHERE uuid = ?")) {
                 statement.setInt(1, user.getStats().getKills());
                 statement.setInt(2, user.getStats().getDeaths());
                 statement.setInt(3, user.getStats().getStreak());
                 statement.setInt(4, user.getStats().getGems());
-                statement.setString(5, user.getUniqueId().toString());
+                statement.setString(5, user.getStats().getCooldownMapAsString());
+                statement.setString(6, user.getUniqueId().toString());
                 statement.executeUpdate();
             } catch (SQLException exception) {
                 exception.printStackTrace();

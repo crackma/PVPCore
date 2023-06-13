@@ -3,6 +3,8 @@ package me.frandma.pvpcore.kits.implementation;
 import me.frandma.pvpcore.gui.GuiManager;
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitManager;
+import me.frandma.pvpcore.user.UserDatabase;
+import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,7 +32,9 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 kit = KitManager.getKit(args[0]);
                 if (kit == null) return false;
                 kit.giveTo(player);
-                sender.sendMessage("§eGave §d" + kit.getName() + " §ekit to §d" + player.getName() + "§e.");
+                if (UserManager.getUser(player.getUniqueId()).getStats().canClaim(kit)) {
+                    sender.sendMessage("§eGave §d" + kit.getName() + " §ekit to §d" + player.getName() + "§e.");
+                }
                 return true;
             case 2:
                 if (!sender.hasPermission("pvpcore.kit.others")) {

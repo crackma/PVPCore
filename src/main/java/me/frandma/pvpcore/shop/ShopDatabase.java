@@ -41,7 +41,7 @@ public class ShopDatabase {
 
     public static CompletableFuture<Void> insertCategory(Category category) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO shop (name, description, displayItem, inventorySlot, items) VALUES (?,?,?,?,?);")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO shop (name, description, displayItem, inventorySlot, items) VALUES (?,?,?,?,?);")) {
                 preparedStatement.setString(1, category.getName());
                 preparedStatement.setString(2, category.getDescription());
                 preparedStatement.setString(3, category.getDisplayItem().toString());

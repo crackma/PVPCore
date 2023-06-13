@@ -1,6 +1,8 @@
 package me.frandma.pvpcore.kits;
 
 import lombok.Getter;
+import me.frandma.pvpcore.user.User;
+import me.frandma.pvpcore.user.UserManager;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +13,10 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Kit {
 
@@ -21,21 +27,24 @@ public class Kit {
     private ItemStack[] items;
 
     @Getter
-    private Material displayItem;
+    private int cooldown, inventorySlot;
 
     @Getter
-    private int inventorySlot;
+    private Material displayItem;
 
-    public Kit(String name, Material displayItem, int inventoryPosition, ItemStack[] items) {
+
+    public Kit(String name, int cooldown, int inventoryPosition, Material displayItem, ItemStack[] items) {
         this.name = name;
+        this.cooldown = cooldown;
+        this.inventorySlot = inventoryPosition;
+        this.displayItem = displayItem;
         this.items = items;
-        this.displayItem = displayItem;
-        this.inventorySlot = inventoryPosition;
     }
-    public Kit(String name, Material displayItem, int inventoryPosition, String base64) {
+    public Kit(String name, int cooldown, int inventoryPosition, Material displayItem, String base64) {
         this.name = name;
-        this.displayItem = displayItem;
+        this.cooldown = cooldown;
         this.inventorySlot = inventoryPosition;
+        this.displayItem = displayItem;
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
@@ -71,6 +80,15 @@ public class Kit {
     }
 
     public void giveTo(HumanEntity player) {
+        User user = UserManager.getUser(player.getUniqueId());
+        if (!user.getStats().canClaim(this)) {
+            long currentTime = new Date().getTime();
+            long cooldownTime = user.getStats().getCooldown(this);
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            player.sendMessage("§cYou cannot claim this kit. Time left: " + formatter.format(cooldownTime - currentTime) + ".");
+            return;
+        }
         for (ItemStack item : items) {
             if (item == null) continue;
             //-1 is returned by #firstEmpty() when an inventory is full
@@ -80,5 +98,6 @@ public class Kit {
             }
             player.getInventory().addItem(item);
         }
+        user.getStats().addCooldown(this);
     }
 }

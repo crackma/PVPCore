@@ -1,9 +1,11 @@
 package me.frandma.pvpcore.kits.implementation;
 
 import me.frandma.pvpcore.PVPCorePlugin;
+import me.frandma.pvpcore.Utils;
 import me.frandma.pvpcore.kits.Kit;
 import me.frandma.pvpcore.kits.KitDatabase;
 import me.frandma.pvpcore.kits.KitManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +29,9 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         try {
-            Kit kit = new Kit(args[0], Material.valueOf(args[1]), Integer.parseInt(args[2]), items);
+            Material material = Material.valueOf(args[3]);
+            if (material == null) return false;
+            Kit kit = new Kit(args[0], Integer.parseInt(args[1]) * 1000 /*milliseconds -> seconds*/, Integer.parseInt(args[2]), material, items);
             KitDatabase kitDatabase = PVPCorePlugin.getKitDatabase();
             kitDatabase.insertKit(kit).thenAccept(data -> {
                 KitManager.addKit(kit);
@@ -47,16 +51,13 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
                 completions.add("<kit_name>");
                 break;
             case 2:
-                List<String> materialList = new ArrayList<>(Material.values().length);
-                for (Material material : Material.values()) {
-                    String materialString = material.toString();
-                    if (!materialString.contains(args[1])) continue;
-                    materialList.add(material.toString());
-                }
-                return materialList;
+                completions.add("<cooldown>");
+                break;
             case 3:
                 completions.add("<inventoryPosition>");
                 break;
+            case 4:
+                return Utils.getMaterialList(args[1]);
         }
         return completions;
     }

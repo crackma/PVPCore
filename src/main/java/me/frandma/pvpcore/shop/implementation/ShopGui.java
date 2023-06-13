@@ -36,7 +36,7 @@ public class ShopGui extends Gui {
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName("§d" + category.getName());
         List<String> meta = new ArrayList<>();
-        meta.add(ChatColor.translateAlternateColorCodes('&', category.getDescription()));
+        meta.add(ChatColor.translateAlternateColorCodes('&',"§e" + category.getDescription()));
         itemMeta.setLore(meta);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);

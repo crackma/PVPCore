@@ -24,8 +24,9 @@ public class KitDatabase {
             try (PreparedStatement preparedStatement = connection.prepareStatement(
                     "CREATE TABLE IF NOT EXISTS kits(" +
                             "name varchar(36) NOT NULL," +
-                            "displayItem varchar(36) NOT NULL," +
+                            "cooldown varchar(36) NOT NULL," +
                             "inventorySlot int NOT NULL," +
+                            "displayItem varchar(36) NOT NULL," +
                             "items varchar(255) NOT NULL);"
             ))
             {
@@ -38,11 +39,12 @@ public class KitDatabase {
 
     public static CompletableFuture<Void> insertKit(Kit kit) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO kits (name, displayItem, inventorySlot, items) VALUES (?,?,?,?);")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO kits (name, cooldown, inventorySlot, displayItem, items) VALUES (?,?,?,?,?);")) {
                 preparedStatement.setString(1, kit.getName());
-                preparedStatement.setString(2, kit.getDisplayItem().toString());
+                preparedStatement.setInt(2, kit.getCooldown());
                 preparedStatement.setInt(3, kit.getInventorySlot());
-                preparedStatement.setString(4, kit.toBase64());
+                preparedStatement.setString(4, kit.getDisplayItem().toString());
+                preparedStatement.setString(5, kit.toBase64());
                 preparedStatement.execute();
             } catch (SQLException exception) {
                 exception.printStackTrace();
@@ -75,12 +77,12 @@ public class KitDatabase {
 
     protected static CompletableFuture<List<Kit>> fetchKits() {
         CompletableFuture<List<Kit>> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, displayItem, inventorySlot, items FROM kits;")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, cooldown, inventorySlot, displayItem, items FROM kits;")) {
                 preparedStatement.execute();
                 ResultSet rs = preparedStatement.getResultSet();
                 List<Kit> kitList = new ArrayList<>();
                 while (rs.next()) {
-                    Kit kit = new Kit(rs.getString(1), Material.valueOf(rs.getString(2)), rs.getInt(3), rs.getString(4));
+                    Kit kit = new Kit(rs.getString(1), rs.getInt(2), rs.getInt(3), Material.valueOf(rs.getString(4)), rs.getString(5));
                     kitList.add(kit);
                 }
                 return kitList;

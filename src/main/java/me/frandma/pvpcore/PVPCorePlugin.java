@@ -69,6 +69,7 @@ public final class PVPCorePlugin extends JavaPlugin {
         getCommand("kit").setTabCompleter(new KitCommand());
 
         getCommand("category").setExecutor(new CategoryCommand());
+        getCommand("category").setTabCompleter(new CategoryCommand());
         getCommand("shop").setExecutor(new ShopCommand());
 
         getCommand("stats").setExecutor(new StatsCommand());

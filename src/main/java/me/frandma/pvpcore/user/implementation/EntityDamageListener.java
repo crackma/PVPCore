@@ -76,17 +76,17 @@ public class EntityDamageListener implements Listener {
         }
 
         attackerUser = victimUser.getLastAttacker();
-        attacker = attackerUser.getPlayer();
 
         Stats victimStats = victimUser.getStats();
         victim.sendMessage(attackerUser == null ? "§eYou died." : "§eYou were killed by §d" + attackerUser.getPlayer().getName() + "§e.");
-        victimUser.setStats(new Stats(victimStats.getKills(), victimStats.getDeaths() + 1, 0, victimStats.getGems()));
+        victimUser.setStats(new Stats(victimStats.getKills(), victimStats.getDeaths() + 1, 0, victimStats.getGems(), victimStats.getCooldownMap()));
         UserDatabase.updateStats(victimUser);
 
         if (attackerUser == victimUser || attackerUser == null) return;
 
+        attacker = attackerUser.getPlayer();
         Stats attackerStats = attackerUser.getStats();
-        attackerUser.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3));
+        attackerUser.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3, attackerStats.getCooldownMap()));
         attacker.sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");
         if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + attacker.getName() + " §eis on a streak of §d" + attackerStats.getStreak() + "§e.");
         UserDatabase.updateStats(attackerUser);
