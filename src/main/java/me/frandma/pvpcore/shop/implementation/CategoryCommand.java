@@ -61,6 +61,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                         if (material.equals(Material.AIR)) return false;
                         category.setDisplayItem(material);
                         sender.sendMessage("§eUpdated §d" + args[1] + "'s§e display item to §d" + args[3] + "§e.");
+                        break;
                     case "inventoryslot":
                         try {
                             category.setInventorySlot(Integer.parseInt(args[3]));
@@ -68,9 +69,11 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                         } catch (NumberFormatException exception) {
                             return false;
                         }
+                        break;
                     case "description":
                         category.setDescription(convertArray(args, " ", 3));
                         sender.sendMessage("§eUpdated §d" + args[1] + "'s§e description.");
+                        break;
                 }
                 return true;
             //category addItem <categoryName> <itemName> <inventorySlot> <price> (hold an item)
@@ -164,19 +167,23 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                     default:
                         break;
                 }
+                break;
             //category addItem <categoryName> <itemName> <inventorySlot> <price>
             case "additem":
                 if (args.length == 2) ShopManager.getCategorySet().forEach(category1 -> completions.add(category1.getName()));
                 if (args.length == 3) completions.add("<itemName>");
                 if (args.length == 4) completions.add("<inventorySlot>");
                 if (args.length == 5) completions.add("<price>");
+                break;
             //category removeItem <categoryName> <itemName>
             case "removeitem":
                 if (args.length == 2) ShopManager.getCategorySet().forEach(category2 -> completions.add(category2.getName()));
                 if (args.length == 3) ShopManager.getCategory(args[1]).getItems().forEach(item -> completions.add(item.getName()));
+                break;
             //category remove <name>
             case "remove":
                 if (args.length == 2) ShopManager.getCategorySet().forEach(category3 -> completions.add(category3.getName()));
+                break;
         }
         return completions;
     }

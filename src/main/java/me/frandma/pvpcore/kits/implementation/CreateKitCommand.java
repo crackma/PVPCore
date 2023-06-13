@@ -11,7 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player)) return true;
         if (args.length < 3) return false;
         Player player = (Player) sender;
-        ItemStack[] items = player.getInventory().getContents();
         if (KitManager.getKit(args[0]) != null) {
             player.sendMessage("§cA kit with that name already exists.");
             return true;
@@ -30,7 +28,7 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
         try {
             Material material = Material.valueOf(args[3]);
             if (material == null) return false;
-            Kit kit = new Kit(args[0], Integer.parseInt(args[1]) * 1000 /*milliseconds -> seconds*/, Integer.parseInt(args[2]), material, items);
+            Kit kit = new Kit(args[0], Integer.parseInt(args[1]) * 1000 /*milliseconds -> seconds*/, Integer.parseInt(args[2]), material, player.getInventory().getContents());
             KitDatabase kitDatabase = PVPCorePlugin.getKitDatabase();
             kitDatabase.insertKit(kit).thenAccept(data -> {
                 KitManager.addKit(kit);
