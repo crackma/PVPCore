@@ -32,19 +32,21 @@ public class Category {
         this.inventorySlot = inventorySlot;
     }
 
-    public Category(String name, String description, Material displayItem, int inventorySlot, String items) {
+    public Category(String name, String description, String displayItem, int inventorySlot, String items) {
         this.name = name;
         this.description = description;
-        this.displayItem = displayItem;
+        this.displayItem = Material.valueOf(displayItem);
         this.inventorySlot = inventorySlot;
+        if (items.trim().isEmpty()) return;
         String[] itemsArray = items.split(";");
-        for (String string : itemsArray) this.items.add(new CategoryItem(string));
+        for (String string : itemsArray) {
+            this.items.add(new CategoryItem(string));
+        }
     }
 
     public String getItemsAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         items.forEach(item -> stringBuilder.append(item.toString() + ";"));
-        Bukkit.getLogger().info(stringBuilder.toString());
         return stringBuilder.toString();
     }
 

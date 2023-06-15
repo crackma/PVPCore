@@ -87,7 +87,6 @@ public class EntityDamageListener implements Listener {
 
         attacker = attackerUser.getPlayer();
         Stats attackerStats = attackerUser.getStats();
-        Bukkit.broadcastMessage(attackerStats.toString());
         attackerUser.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3, attackerStats.getCooldownMap()));
         attackerStats = attackerUser.getStats();
         attacker.sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");

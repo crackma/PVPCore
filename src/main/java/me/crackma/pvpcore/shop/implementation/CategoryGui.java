@@ -38,8 +38,9 @@ public class CategoryGui extends Gui {
     }
 
     private void addItem(CategoryItem item) {
-        ItemStack itemStack = new ItemStack(item.getItemStack());
+        ItemStack itemStack = new ItemStack(item.getItemStack().getType());
         ItemMeta itemMeta = itemStack.getItemMeta();
+
         itemMeta.setDisplayName("§d" + item.getName());
         List<String> meta = new ArrayList<>();
         meta.add(item.getPrice() == 1 ? "§ePrice: §d" + item.getPrice() + " gem§e." : "§ePrice: §d" + item.getPrice() + " gems§e.");

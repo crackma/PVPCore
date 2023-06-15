@@ -33,17 +33,18 @@ public class CategoryItem {
 
     public CategoryItem(String fromString) {
         String[] categoryItem = fromString.split(",");
+        Bukkit.getLogger().info(categoryItem[1]);
         this.name = categoryItem[0];
+        this.inventorySlot = Integer.parseInt(categoryItem[2]);
+        this.price = Integer.parseInt(categoryItem[3]);
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decode(categoryItem[1]));
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(categoryItem[1]));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             this.itemStack = (ItemStack) dataInput.readObject();
             dataInput.close();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-        this.inventorySlot = Integer.parseInt(categoryItem[2]);
-        this.price = Integer.parseInt(categoryItem[2]);
     }
 
     public void giveTo(HumanEntity player) {
@@ -68,7 +69,7 @@ public class CategoryItem {
 
             dataOutput.writeObject(itemStack);
             dataOutput.close();
-            Bukkit.broadcastMessage(Base64Coder.encodeLines(outputStream.toByteArray()));
+
             return name + "," + Base64Coder.encodeLines(outputStream.toByteArray()) + "," + inventorySlot + "," + price;
         } catch (Exception e) {
             e.printStackTrace();

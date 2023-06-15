@@ -16,7 +16,6 @@ import me.crackma.pvpcore.shop.implementation.ShopCommand;
 import me.crackma.pvpcore.user.implementation.EditStatsCommand;
 import me.crackma.pvpcore.user.implementation.StatsCommand;
 import me.crackma.pvpcore.user.implementation.EntityDamageListener;
-import me.crackma.pvpcore.user.implementation.PlayerJoinListener;
 import me.crackma.pvpcore.user.implementation.PlayerLoginListener;
 import me.crackma.pvpcore.utils.PAPI;
 import org.bukkit.Bukkit;
@@ -64,7 +63,6 @@ public final class PVPCorePlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(), this);
     }
 

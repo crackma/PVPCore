@@ -2,7 +2,6 @@ package me.crackma.pvpcore.shop;
 
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 
 import java.io.File;
 import java.sql.*;
@@ -26,7 +25,7 @@ public class ShopDatabase {
                             "description varchar(255) NOT NULL," +
                             "displayItem varchar(36) NOT NULL," +
                             "inventorySlot int NOT NULL," +
-                            "items varchar(4096) NOT NULL);"
+                            "items String NOT NULL);"
             ))
             {
                 preparedStatement.execute();
@@ -80,9 +79,15 @@ public class ShopDatabase {
                 ResultSet rs = preparedStatement.executeQuery();
                 Set<Category> categorySet = new HashSet<>();
                 while (rs.next()) {
-                    Category category = new Category(rs.getString(1), rs.getString(2), Material.valueOf(rs.getString(3)), rs.getInt(4), rs.getString(5));
+                    Bukkit.getLogger().info("rs1. " + rs.getString(1));
+                    Bukkit.getLogger().info("rs2. " + rs.getString(2));
+                    Bukkit.getLogger().info("rs3. " + rs.getString(3));
+                    Bukkit.getLogger().info("rs4. " + rs.getString(4));
+                    Bukkit.getLogger().info("rs5. " + rs.getString(5));
+                    Category category = new Category(rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5));
                     categorySet.add(category);
                 }
+                preparedStatement.close();
                 return categorySet;
             } catch (SQLException exception) {
                 exception.printStackTrace();

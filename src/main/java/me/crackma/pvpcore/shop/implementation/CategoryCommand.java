@@ -102,6 +102,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 category.removeItem(args[2]);
                 sender.sendMessage("§eRemoved item from category §d" + args[1] + "§e.");
                 ShopDatabase.insertCategory(category);
+                return true;
             //category remove <name>
             case "remove":
                 if (args.length < 2) return false;
