@@ -1,7 +1,9 @@
 name: PVPCore
 version: '${project.version}'
-main: me.frandma.pvpcore.PVPCorePlugin
+main: me.crackma.pvpcore.PVPCorePlugin
 api-version: 1.19
+author: crackma
+softdepend: [PlaceholderAPI]
 commands:
   createkit:
     description: Create kits.
