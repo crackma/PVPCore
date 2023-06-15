@@ -4,13 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +44,7 @@ public class Category {
     public String getItemsAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         items.forEach(item -> stringBuilder.append(item.toString() + ";"));
+        Bukkit.getLogger().info(stringBuilder.toString());
         return stringBuilder.toString();
     }
 

@@ -26,7 +26,7 @@ public class ShopDatabase {
                             "description varchar(255) NOT NULL," +
                             "displayItem varchar(36) NOT NULL," +
                             "inventorySlot int NOT NULL," +
-                            "items varchar(255) NOT NULL);"
+                            "items varchar(4096) NOT NULL);"
             ))
             {
                 preparedStatement.execute();
@@ -77,8 +77,7 @@ public class ShopDatabase {
     protected static CompletableFuture<Set<Category>> fetchCategories() {
         CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, description, displayItem, inventorySlot, items FROM shop;")) {
-                preparedStatement.execute();
-                ResultSet rs = preparedStatement.getResultSet();
+                ResultSet rs = preparedStatement.executeQuery();
                 Set<Category> categorySet = new HashSet<>();
                 while (rs.next()) {
                     Category category = new Category(rs.getString(1), rs.getString(2), Material.valueOf(rs.getString(3)), rs.getInt(4), rs.getString(5));
