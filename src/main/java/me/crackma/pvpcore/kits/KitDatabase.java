@@ -52,7 +52,7 @@ public class KitDatabase {
             documents.forEach(document -> {
                 Kit kit = new Kit(
                         document.getString("_id"),
-                        document.getInteger("description"),
+                        document.getInteger("cooldown"),
                         document.getInteger("inventorySlot"),
                         document.getString("displayItem"),
                         document.getString("items")
