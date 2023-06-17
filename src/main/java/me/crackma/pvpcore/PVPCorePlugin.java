@@ -1,5 +1,8 @@
 package me.crackma.pvpcore;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import me.crackma.pvpcore.enchanting.EnchantListener;
 import me.crackma.pvpcore.kits.implementation.CreateKitCommand;
@@ -27,6 +30,9 @@ public final class PVPCorePlugin extends JavaPlugin {
     private static PVPCorePlugin instance;
 
     @Getter
+    private MongoDatabase mongoDatabase;
+
+    @Getter
     private static UserDatabase userDatabase;
 
     @Getter
@@ -42,10 +48,12 @@ public final class PVPCorePlugin extends JavaPlugin {
         this.saveDefaultConfig();
 
         instance = this;
+        MongoClient mongoClient = MongoClients.create(getConfig().getString("connection_uri"));
+        mongoDatabase = mongoClient.getDatabase(getConfig().getString("database"));
 
-        userDatabase = new UserDatabase();
-        kitDatabase = new KitDatabase();
-        shopDatabase = new ShopDatabase();
+        userDatabase = new UserDatabase(this, mongoDatabase);
+        kitDatabase = new KitDatabase(this, mongoDatabase);
+        shopDatabase = new ShopDatabase(this, mongoDatabase);
         KitManager.init();
         ShopManager.init();
 

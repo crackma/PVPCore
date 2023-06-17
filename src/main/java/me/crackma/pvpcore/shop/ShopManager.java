@@ -31,6 +31,10 @@ public class ShopManager {
         return null;
     }
 
+    public boolean exists(Category category) {
+        return categorySet.contains(category);
+    }
+
     public void deleteCategory(Category category) {
         categorySet.remove(category);
     }

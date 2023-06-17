@@ -2,3 +2,9 @@
 kit_gui_size: 27
 # size of the shop gui (must be rows * 9)
 shop_gui_size: 27
+# mongodb
+connection_uri: replace
+database: replace
+kit_collection: replace
+shop_collection: replace
+user_collection: replace

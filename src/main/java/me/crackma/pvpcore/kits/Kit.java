@@ -2,6 +2,7 @@ package me.crackma.pvpcore.kits;
 
 import lombok.Getter;
 import me.crackma.pvpcore.user.User;
+import me.crackma.pvpcore.user.UserDatabase;
 import me.crackma.pvpcore.user.UserManager;
 import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Material;
@@ -22,14 +23,13 @@ public class Kit {
     private final String name;
 
     @Getter
-    private ItemStack[] items;
-
-    @Getter
     private int cooldown, inventorySlot;
 
     @Getter
     private Material displayItem;
 
+    @Getter
+    private ItemStack[] items;
 
     public Kit(String name, int cooldown, int inventoryPosition, Material displayItem, ItemStack[] items) {
         this.name = name;
@@ -38,11 +38,11 @@ public class Kit {
         this.displayItem = displayItem;
         this.items = items;
     }
-    public Kit(String name, int cooldown, int inventoryPosition, Material displayItem, String base64) {
+    public Kit(String name, int cooldown, int inventoryPosition, String displayItem, String base64) {
         this.name = name;
         this.cooldown = cooldown;
         this.inventorySlot = inventoryPosition;
-        this.displayItem = displayItem;
+        this.displayItem = Material.valueOf(displayItem);
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
@@ -58,7 +58,7 @@ public class Kit {
         }
     }
 
-    public String toBase64() {
+    public String getItemsAsBase64() {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
@@ -95,5 +95,6 @@ public class Kit {
             player.getInventory().addItem(item);
         }
         user.getStats().addCooldown(this);
+        UserDatabase.updateStats(user);
     }
 }

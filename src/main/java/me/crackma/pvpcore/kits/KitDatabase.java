@@ -1,55 +1,65 @@
 package me.crackma.pvpcore.kits;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.shop.Category;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class KitDatabase {
 
-    private static Connection connection;
+    private static MongoCollection<Document> collection;
 
-    public KitDatabase() {
-        try {
-            //make the connection
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + new File(PVPCorePlugin.getInstance().getDataFolder(), "kits.db"));
-
-            //create table
-            try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS kits(" +
-                            "name varchar(36) NOT NULL," +
-                            "cooldown varchar(36) NOT NULL," +
-                            "inventorySlot int NOT NULL," +
-                            "displayItem varchar(36) NOT NULL," +
-                            "items varchar(255) NOT NULL);"
-            ))
-            {
-                preparedStatement.execute();
-            }
-        } catch (SQLException | ClassNotFoundException exception) {
-            Bukkit.getLogger().severe(exception.toString());
-        }
+    public KitDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
+        MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("kit_collection"));
+        this.collection = collection;
     }
 
     public static CompletableFuture<Void> insertKit(Kit kit) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO kits (name, cooldown, inventorySlot, displayItem, items) VALUES (?,?,?,?,?);")) {
-                preparedStatement.setString(1, kit.getName());
-                preparedStatement.setInt(2, kit.getCooldown());
-                preparedStatement.setInt(3, kit.getInventorySlot());
-                preparedStatement.setString(4, kit.getDisplayItem().toString());
-                preparedStatement.setString(5, kit.toBase64());
-                preparedStatement.execute();
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
+            Document document = new Document();
+            document.put("_id", kit.getName());
+            document.put("cooldown", kit.getCooldown());
+            document.put("inventorySlot", kit.getInventorySlot());
+            document.put("displayItem", kit.getDisplayItem());
+            document.put("items", kit.getItemsAsBase64());
+            collection.insertOne(document);
             return null;
+        });
+        future.exceptionally(exception -> {
+            exception.printStackTrace();
+            return null;
+        });
+        return future;
+    }
+
+    protected static CompletableFuture<Set<Kit>> fetchKits() {
+        CompletableFuture<Set<Kit>> future = CompletableFuture.supplyAsync(() -> {
+            FindIterable<Document> documents = collection.find();
+            Set<Kit> categorySet = new HashSet<>();
+            documents.forEach(document -> {
+                Kit kit = new Kit(
+                        document.getString("_id"),
+                        document.getInteger("description"),
+                        document.getInteger("inventorySlot"),
+                        document.getString("displayItem"),
+                        document.getString("items")
+                );
+                categorySet.add(kit);
+            });
+            return categorySet;
         });
         future.exceptionally(exception -> {
             exception.printStackTrace();
@@ -60,36 +70,8 @@ public class KitDatabase {
 
     public static CompletableFuture<Void> deleteKit(String kitName) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM kits WHERE name = ?;")) {
-                preparedStatement.setString(1, kitName);
-                preparedStatement.execute();
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
+            collection.deleteOne(Filters.eq("_id", kitName));
             return null;
-        });
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
-    }
-
-    protected static CompletableFuture<List<Kit>> fetchKits() {
-        CompletableFuture<List<Kit>> future = CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, cooldown, inventorySlot, displayItem, items FROM kits;")) {
-                preparedStatement.execute();
-                ResultSet rs = preparedStatement.getResultSet();
-                List<Kit> kitList = new ArrayList<>();
-                while (rs.next()) {
-                    Kit kit = new Kit(rs.getString(1), rs.getInt(2), rs.getInt(3), Material.valueOf(rs.getString(4)), rs.getString(5));
-                    kitList.add(kit);
-                }
-                return kitList;
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-                return null;
-            }
         });
         future.exceptionally(exception -> {
             exception.printStackTrace();

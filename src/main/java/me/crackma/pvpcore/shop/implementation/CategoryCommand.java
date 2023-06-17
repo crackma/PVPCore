@@ -46,7 +46,6 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 } catch (NumberFormatException exception) {
                     return false;
                 }
-                ShopManager.addCategory(category);
                 ShopDatabase.insertCategory(category);
                 sender.sendMessage("§eCreated category §d" + args[1] + "§e.");
                 return true;

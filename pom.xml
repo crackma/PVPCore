@@ -94,5 +94,10 @@
             <version>2.11.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.9.1</version>
+        </dependency>
     </dependencies>
 </project>

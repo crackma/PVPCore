@@ -14,7 +14,7 @@ public class PlayerLoginListener implements Listener {
     public void onLogin(AsyncPlayerPreLoginEvent event) {
         UUID uuid = event.getUniqueId();
 
-        UserDatabase.insertOrIgnoreUser(uuid);
+        UserDatabase.insertUser(uuid);
 
         UserDatabase.fetchStats(uuid).thenAccept(stats -> {
             if (!UserManager.exists(uuid)) UserManager.addUser(new User(uuid, stats));

@@ -30,7 +30,8 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
             stats.setDeaths(Integer.parseInt(args[2]));
             stats.setStreak(Integer.parseInt(args[3]));
             stats.setGems(Integer.parseInt(args[4]));
-            UserDatabase.updateStats(user).thenAccept(nothing -> sender.sendMessage("updated stats of " + player.getName() + " to " + stats));
+            UserDatabase.updateStats(user);
+            sender.sendMessage("updated stats of " + player.getName() + " to " + stats);
         } catch (NumberFormatException e) {
             return false;
         }

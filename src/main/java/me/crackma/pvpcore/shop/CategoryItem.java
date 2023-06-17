@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.crackma.pvpcore.user.Stats;
 import me.crackma.pvpcore.user.User;
 import me.crackma.pvpcore.user.UserManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -33,7 +32,6 @@ public class CategoryItem {
 
     public CategoryItem(String fromString) {
         String[] categoryItem = fromString.split(",");
-        Bukkit.getLogger().info(categoryItem[1]);
         this.name = categoryItem[0];
         this.inventorySlot = Integer.parseInt(categoryItem[2]);
         this.price = Integer.parseInt(categoryItem[3]);
@@ -47,14 +45,19 @@ public class CategoryItem {
         }
     }
 
-    public void giveTo(HumanEntity player) {
+    public void giveTo(HumanEntity player, int amount) {
         User user = UserManager.getUser(player.getUniqueId());
         if (user.getStats().getGems() < price) {
             player.sendMessage("§cYou cannot afford that.");
             return;
         }
         Stats stats = user.getStats();
+        int price = this.price * amount;
         stats.setGems(stats.getGems() - price);
+        String gemOrGems = price == 1 ? "gem" : "gems";
+        player.sendMessage("§eYou bought §d" + amount + "§e of §d" + name + " §efor §d" + price + " " + gemOrGems + "§e.");
+        ItemStack itemStack = new ItemStack(this.itemStack);
+        itemStack.setAmount(amount);
         if (player.getInventory().firstEmpty() == -1) {
             player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
             return;

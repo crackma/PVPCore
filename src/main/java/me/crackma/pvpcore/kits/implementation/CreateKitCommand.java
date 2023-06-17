@@ -19,7 +19,7 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;
-        if (args.length < 3) return false;
+        if (args.length < 4) return false;
         Player player = (Player) sender;
         if (KitManager.getKit(args[0]) != null) {
             player.sendMessage("§cA kit with that name already exists.");
