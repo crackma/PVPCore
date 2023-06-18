@@ -6,7 +6,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,7 +56,6 @@ public class ShopDatabase {
     }
 
     protected static CompletableFuture<Set<Category>> fetchCategories() {
-        Bukkit.getLogger().info("fetchCategories");
         CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
             FindIterable<Document> documents = collection.find();
             Set<Category> categorySet = new HashSet<>();

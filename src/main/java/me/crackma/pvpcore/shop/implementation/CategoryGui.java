@@ -38,7 +38,7 @@ public class CategoryGui extends Gui {
     }
 
     private void addItem(CategoryItem categoryItem) {
-        ItemStack itemStack = new ItemStack(categoryItem.getItemStack());
+        ItemStack itemStack = new ItemStack(categoryItem.getItemStack().getType());
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName("§d" + categoryItem.getName());
         List<String> meta = new ArrayList<>();
@@ -46,8 +46,7 @@ public class CategoryGui extends Gui {
         meta.add("§7Left click to buy.");
         meta.add("§7Right click for more options.");
         itemMeta.setLore(meta);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES,ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
         this.addButton(categoryItem.getInventorySlot(), new GuiButton().
                 creator(unused -> itemStack).

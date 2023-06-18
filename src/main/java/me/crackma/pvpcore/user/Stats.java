@@ -2,6 +2,7 @@ package me.crackma.pvpcore.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.kits.Kit;
 
 import java.util.Date;
@@ -13,6 +14,8 @@ public class Stats {
     @Getter
     @Setter
     private int kills, deaths, streak, gems;
+
+    private long combatTimer;
 
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
@@ -37,6 +40,14 @@ public class Stats {
         this.gems = gems;
         if (cooldownMap == null) return;
         this.cooldownMap = cooldownMap;
+    }
+
+    public void resetCombatTimer() {
+        combatTimer =
+    }
+
+    public boolean isInCombat() {
+        return combatTimer > new Date().getTime();
     }
 
     public void addCooldown(Kit kit) {

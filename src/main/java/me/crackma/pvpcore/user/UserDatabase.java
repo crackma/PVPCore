@@ -19,7 +19,7 @@ public class UserDatabase {
         this.collection = collection;
     }
 
-    public static void insertUser(UUID uuid) {
+    public static CompletableFuture<Void> insertUser(UUID uuid) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             if (collection.find(Filters.eq("_id", uuid.toString())).first() != null) return null;
             Document document = new Document();
@@ -36,6 +36,7 @@ public class UserDatabase {
             exception.printStackTrace();
             return null;
         });
+        return future;
     }
 
     public static CompletableFuture<Boolean> exists(UUID uuid) {

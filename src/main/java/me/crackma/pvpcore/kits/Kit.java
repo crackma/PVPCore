@@ -85,14 +85,16 @@ public class Kit {
             player.sendMessage("§cYou cannot claim this kit. Time left: " + Utils.formatToDate(cooldownTime - currentTime) + ".");
             return;
         }
-        for (ItemStack item : items) {
-            if (item == null) continue;
+        for (ItemStack itemStack : items) {
+            if (itemStack == null) continue;
+            //hoping this fixes the problem where items' values randomly decrease
+            ItemStack itemStack1 = new ItemStack(itemStack);
             //-1 is returned by #firstEmpty() when an inventory is full
             if (player.getInventory().firstEmpty() == -1) {
-                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                player.getWorld().dropItemNaturally(player.getLocation(), itemStack1);
                 continue;
             }
-            player.getInventory().addItem(item);
+            player.getInventory().addItem(itemStack1);
         }
         user.getStats().addCooldown(this);
         UserDatabase.updateStats(user);

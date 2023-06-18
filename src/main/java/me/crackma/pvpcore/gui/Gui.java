@@ -44,8 +44,10 @@ public abstract class Gui {
         GuiButton button = this.buttonMap.get(slot);
         if (button == null) return;
         if (event.getClick() == ClickType.LEFT) {
+            if (button.getLeftEventConsumer() == null) return;
             button.getLeftEventConsumer().accept(event);
         } else if (event.getClick() == ClickType.RIGHT) {
+            if (button.getRightEventConsumer() == null) return;
             button.getRightEventConsumer().accept(event);
         }
     }

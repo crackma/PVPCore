@@ -2,6 +2,8 @@
 kit_gui_size: 27
 # size of the shop gui (must be rows * 9)
 shop_gui_size: 27
+# combat timer (seconds)
+combat_timer:
 # mongodb
 connection_uri: replace
 database: replace

@@ -41,7 +41,7 @@ public class ItemGui extends Gui {
     }
 
     private void addItem(int inventorySlot, int amount) {
-        ItemStack itemStack = new ItemStack(categoryItem.getItemStack());
+        ItemStack itemStack = new ItemStack(categoryItem.getItemStack().getType());
         itemStack.setAmount(amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName("§d" + categoryItem.getName());
@@ -49,8 +49,7 @@ public class ItemGui extends Gui {
         int newPrice = categoryItem.getPrice() * amount;
         meta.add(newPrice == 1 ? "§ePrice: §d" + newPrice + " gem§e." : "§ePrice: §d" + newPrice + " gems§e.");
         itemMeta.setLore(meta);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         itemStack.setItemMeta(itemMeta);
         this.addButton(inventorySlot, new GuiButton().
                 creator(unused -> itemStack).
