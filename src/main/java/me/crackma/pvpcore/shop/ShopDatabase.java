@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ShopDatabase {
 
-    private static MongoCollection<Document> collection;
+    private MongoCollection<Document> collection;
 
     public ShopDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("shop_collection"));

@@ -5,14 +5,16 @@ import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class EntityDamageListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageEvent event) {
+        if (event.isCancelled()) return;
         if (!(event.getEntity() instanceof Player)) return;
 
         Player victim = (Player) event.getEntity();

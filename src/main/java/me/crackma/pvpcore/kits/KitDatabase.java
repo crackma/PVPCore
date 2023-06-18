@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class KitDatabase {
 
-    private static MongoCollection<Document> collection;
+    private MongoCollection<Document> collection;
 
     private PVPCorePlugin plugin;
 

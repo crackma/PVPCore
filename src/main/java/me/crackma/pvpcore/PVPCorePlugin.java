@@ -27,9 +27,6 @@ public final class PVPCorePlugin extends JavaPlugin {
     private static PVPCorePlugin instance;
 
     @Getter
-    private MongoDatabase mongoDatabase;
-
-    @Getter
     private static UserDatabase userDatabase;
 
     @Getter
@@ -46,7 +43,7 @@ public final class PVPCorePlugin extends JavaPlugin {
 
         instance = this;
         MongoClient mongoClient = MongoClients.create(getConfig().getString("connection_uri"));
-        mongoDatabase = mongoClient.getDatabase(getConfig().getString("database"));
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(getConfig().getString("database"));
 
         userDatabase = new UserDatabase(this, mongoDatabase);
         kitDatabase = new KitDatabase(this, mongoDatabase);

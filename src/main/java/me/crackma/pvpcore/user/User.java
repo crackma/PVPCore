@@ -49,6 +49,7 @@ public class User {
         bukkitTask = new BukkitRunnable() {
             @Override
             public void run() {
+                if (getPlayer() == null) this.cancel();
                 if (!stats.isInCombat()) this.cancel();
                 stats.setCombatTimer(stats.getCombatTimer() - 1);
                 if (stats.isInCombat()) return;

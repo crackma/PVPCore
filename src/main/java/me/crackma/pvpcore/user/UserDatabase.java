@@ -17,7 +17,7 @@ public class UserDatabase {
 
     private PVPCorePlugin plugin;
 
-    private static MongoCollection<Document> collection;
+    private MongoCollection<Document> collection;
 
     public UserDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
         this.plugin = plugin;
