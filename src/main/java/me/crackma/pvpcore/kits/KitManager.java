@@ -2,6 +2,7 @@ package me.crackma.pvpcore.kits;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import me.crackma.pvpcore.PVPCorePlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class KitManager {
     private Set<Kit> kitSet = new HashSet<>();
 
     public void init() {
-        KitDatabase.fetchKits().thenAccept(kits -> {
+        PVPCorePlugin.getKitDatabase().fetchKits().thenAccept(kits -> {
             for (Kit kit : kits) {
                 addKit(kit);
             }

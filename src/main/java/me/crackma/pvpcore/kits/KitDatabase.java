@@ -5,16 +5,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.shop.Category;
 import org.bson.Document;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 
-import java.io.File;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,12 +15,15 @@ public class KitDatabase {
 
     private static MongoCollection<Document> collection;
 
+    private PVPCorePlugin plugin;
+
     public KitDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
+        this.plugin = plugin;
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("kit_collection"));
         this.collection = collection;
     }
 
-    public static CompletableFuture<Void> insertKit(Kit kit) {
+    public CompletableFuture<Void> insertKit(Kit kit) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             Document document = new Document();
             document.put("_id", kit.getName());
@@ -45,7 +41,7 @@ public class KitDatabase {
         return future;
     }
 
-    protected static CompletableFuture<Set<Kit>> fetchKits() {
+    protected CompletableFuture<Set<Kit>> fetchKits() {
         CompletableFuture<Set<Kit>> future = CompletableFuture.supplyAsync(() -> {
             FindIterable<Document> documents = collection.find();
             Set<Kit> categorySet = new HashSet<>();
@@ -55,7 +51,8 @@ public class KitDatabase {
                         document.getInteger("cooldown"),
                         document.getInteger("inventorySlot"),
                         document.getString("displayItem"),
-                        document.getString("items")
+                        document.getString("items"),
+                        plugin
                 );
                 categorySet.add(kit);
             });
@@ -68,7 +65,7 @@ public class KitDatabase {
         return future;
     }
 
-    public static CompletableFuture<Void> deleteKit(String kitName) {
+    public CompletableFuture<Void> deleteKit(String kitName) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             collection.deleteOne(Filters.eq("_id", kitName));
             return null;

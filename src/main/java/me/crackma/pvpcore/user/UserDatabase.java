@@ -3,6 +3,7 @@ package me.crackma.pvpcore.user;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import lombok.experimental.UtilityClass;
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -10,18 +11,23 @@ import org.bukkit.Bukkit;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class UserDatabase {
+
+    private PVPCorePlugin plugin;
 
     private static MongoCollection<Document> collection;
 
     public UserDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
+        this.plugin = plugin;
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
         this.collection = collection;
     }
 
-    public static CompletableFuture<Void> insertUser(UUID uuid) {
+    public CompletableFuture<Void> insertUser(UUID uuid) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            if (collection.find(Filters.eq("_id", uuid.toString())).first() != null) return null;
+            if (collection.find(eq("_id", uuid.toString())).first() != null) return null;
             Document document = new Document();
             document.put("_id", uuid.toString());
             document.put("kills", 0);
@@ -39,8 +45,8 @@ public class UserDatabase {
         return future;
     }
 
-    public static CompletableFuture<Boolean> exists(UUID uuid) {
-        CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> collection.find(Filters.eq("_id", uuid.toString())).first() != null);
+    public CompletableFuture<Boolean> exists(UUID uuid) {
+        CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> collection.find(eq("_id", uuid.toString())).first() != null);
         future.exceptionally(exception -> {
             exception.printStackTrace();
             return null;
@@ -48,16 +54,17 @@ public class UserDatabase {
         return future;
     }
 
-    public static CompletableFuture<Stats> fetchStats(UUID uuid) {
+    public CompletableFuture<Stats> fetchStats(UUID uuid) {
         CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
-            Document document = collection.find(Filters.eq("_id", uuid.toString())).first();
+            Document document = collection.find(eq("_id", uuid.toString())).first();
             if (document == null) return null;
             return new Stats(
                     document.getInteger("kills"),
                     document.getInteger("deaths"),
                     document.getInteger("streak"),
                     document.getInteger("gems"),
-                    document.getString("kitCooldowns")
+                    document.getString("kitCooldowns"),
+                    plugin
             );
         });
         future.exceptionally(exception -> {
@@ -67,7 +74,7 @@ public class UserDatabase {
         return future;
     }
 
-    public static CompletableFuture<Void> updateStats(User user) {
+    public CompletableFuture<Void> updateStats(User user) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             Document document = new Document();
             Stats stats = user.getStats();
@@ -76,7 +83,7 @@ public class UserDatabase {
             document.put("streak", stats.getStreak());
             document.put("gems", stats.getGems());
             document.put("kitCooldowns", stats.getCooldownMapAsString());
-            collection.replaceOne(Filters.eq(user.getUniqueId().toString()), document);
+            collection.replaceOne(eq(user.getUniqueId().toString()), document);
             return null;
         });
         future.exceptionally(exception -> {

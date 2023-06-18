@@ -1,10 +1,11 @@
 package me.crackma.pvpcore.shop.implementation;
 
-import me.crackma.pvpcore.utils.Utils;
+import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.shop.Category;
 import me.crackma.pvpcore.shop.CategoryItem;
 import me.crackma.pvpcore.shop.ShopDatabase;
 import me.crackma.pvpcore.shop.ShopManager;
+import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,6 +24,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
         Category category;
         Material material;
         String description;
+        ShopDatabase shopDatabase = PVPCorePlugin.getShopDatabase();
         switch (args[0].toLowerCase()) {
             case "help":
                 sender.sendMessage("§7/category create <name> <displayItem> <inventorySlot> <description>\n" +
@@ -46,7 +48,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 } catch (NumberFormatException exception) {
                     return false;
                 }
-                ShopDatabase.insertCategory(category);
+                PVPCorePlugin.getShopDatabase().insertCategory(category);
                 sender.sendMessage("§eCreated category §d" + args[1] + "§e.");
                 return true;
             //category edit <name> displayItem/inventorySlot/description <new>
@@ -91,7 +93,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                     return false;
                 }
                 sender.sendMessage("§eAdded item to category §d" + args[1] + "§e.");
-                ShopDatabase.insertCategory(category);
+                shopDatabase.insertCategory(category);
                 return true;
             //category removeItem <categoryName> <itemName>
             case "removeitem":
@@ -100,14 +102,14 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 if (category == null) return false;
                 category.removeItem(args[2]);
                 sender.sendMessage("§eRemoved item from category §d" + args[1] + "§e.");
-                ShopDatabase.insertCategory(category);
+                shopDatabase.insertCategory(category);
                 return true;
             //category remove <name>
             case "remove":
                 if (args.length < 2) return false;
                 category = ShopManager.getCategory(args[1]);
                 if (category == null) return false;
-                ShopDatabase.deleteCategory(category.getName());
+                shopDatabase.deleteCategory(category.getName());
                 ShopManager.deleteCategory(category);
                 sender.sendMessage("§eRemoved category §d" + args[1] + "§e.");
                 return true;

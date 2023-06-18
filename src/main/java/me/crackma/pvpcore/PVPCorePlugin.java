@@ -67,8 +67,9 @@ public final class PVPCorePlugin extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new GuiListener(), this);
 
+        Bukkit.getPluginManager().registerEvents(new CommandListener(this), this);
         Bukkit.getPluginManager().registerEvents(new EntityDamageListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerLoginListener(this), this);
     }
 
     private void registerCommands() {

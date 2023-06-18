@@ -1,5 +1,6 @@
 package me.crackma.pvpcore.kits.implementation;
 
+import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.kits.Kit;
 import me.crackma.pvpcore.kits.KitDatabase;
 import me.crackma.pvpcore.kits.KitManager;
@@ -17,7 +18,7 @@ public class DeleteKitCommand implements CommandExecutor, TabCompleter {
         if (args.length < 1) return false;
         Kit kit = KitManager.getKit(args[0]);
         if (kit == null) return false;
-        KitDatabase.deleteKit(kit.getName()).thenAccept(data -> {
+        PVPCorePlugin.getKitDatabase().deleteKit(kit.getName()).thenAccept(data -> {
             KitManager.deleteKit(kit);
             sender.sendMessage("§eDeleted kit §d" + args[0] + "§e.");
         });

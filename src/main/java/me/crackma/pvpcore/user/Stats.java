@@ -15,13 +15,20 @@ public class Stats {
     @Setter
     private int kills, deaths, streak, gems;
 
-    private long combatTimer;
+    @Getter
+    @Setter
+    private int combatTimer = 0;
+
+    @Getter
+    private int configCombatTimer;
 
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
     private Map<String, Long> cooldownMap = new HashMap<>();
 
-    public Stats(int kills, int deaths, int streak, int gems, String cooldowns) {
+    private PVPCorePlugin plugin;
+
+    public Stats(int kills, int deaths, int streak, int gems, String cooldowns, PVPCorePlugin plugin) {
         this.kills = kills;
         this.deaths = deaths;
         this.streak = streak;
@@ -32,29 +39,29 @@ public class Stats {
             String[] splitCooldown = cooldown.split(":");
             cooldownMap.put(splitCooldown[0], Long.valueOf(splitCooldown[1]));
         }
+        this.plugin = plugin;
+        this.configCombatTimer = plugin.getConfig().getInt("combat_timer");
     }
-    public Stats(int kills, int deaths, int streak, int gems, Map<String, Long> cooldownMap) {
+    public Stats(int kills, int deaths, int streak, int gems, Map<String, Long> cooldownMap, PVPCorePlugin plugin) {
         this.kills = kills;
         this.deaths = deaths;
         this.streak = streak;
         this.gems = gems;
         if (cooldownMap == null) return;
         this.cooldownMap = cooldownMap;
-    }
-
-    public void resetCombatTimer() {
-        combatTimer =
+        this.plugin = plugin;
+        this.configCombatTimer = plugin.getConfig().getInt("combat_timer");
     }
 
     public boolean isInCombat() {
-        return combatTimer > new Date().getTime();
+        return combatTimer > 0;
     }
 
-    public void addCooldown(Kit kit) {
+    public void addKitCooldown(Kit kit) {
         cooldownMap.put(kit.getName(), new Date().getTime() + kit.getCooldown());
     }
 
-    public long getCooldown(Kit kit) {
+    public long getKitCooldown(Kit kit) {
         return cooldownMap.get(kit.getName());
     }
 
@@ -73,8 +80,7 @@ public class Stats {
     }
 
     public String toString() {
-        return kills + ", " + deaths + ", " + streak + ", " + gems;
+        return kills + ", " + deaths + ", " + streak + ", " + gems + ", " + combatTimer;
     }
-
 
 }

@@ -1,6 +1,7 @@
 package me.crackma.pvpcore.kits;
 
 import lombok.Getter;
+import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.User;
 import me.crackma.pvpcore.user.UserDatabase;
 import me.crackma.pvpcore.user.UserManager;
@@ -38,7 +39,7 @@ public class Kit {
         this.displayItem = displayItem;
         this.items = items;
     }
-    public Kit(String name, int cooldown, int inventorySlot, String displayItem, String base64) {
+    public Kit(String name, int cooldown, int inventorySlot, String displayItem, String base64, PVPCorePlugin plugin) {
         this.name = name;
         this.cooldown = cooldown;
         this.inventorySlot = inventorySlot;
@@ -81,7 +82,7 @@ public class Kit {
         User user = UserManager.getUser(player.getUniqueId());
         if (!user.getStats().canClaim(this)) {
             long currentTime = new Date().getTime();
-            long cooldownTime = user.getStats().getCooldown(this);
+            long cooldownTime = user.getStats().getKitCooldown(this);
             player.sendMessage("§cYou cannot claim this kit. Time left: " + Utils.formatToDate(cooldownTime - currentTime) + ".");
             return;
         }
@@ -96,7 +97,7 @@ public class Kit {
             }
             player.getInventory().addItem(itemStack1);
         }
-        user.getStats().addCooldown(this);
-        UserDatabase.updateStats(user);
+        user.getStats().addKitCooldown(this);
+        PVPCorePlugin.getUserDatabase().updateStats(user);
     }
 }

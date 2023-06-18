@@ -45,6 +45,9 @@ public class PAPI extends PlaceholderExpansion {
         if(params.equalsIgnoreCase("gems")) {
             return user.getStats().getGems() + "";
         }
+        if(params.equalsIgnoreCase("combatTimer")) {
+            return user.getStats().getCombatTimer() + "";
+        }
         return null;
     }
 }

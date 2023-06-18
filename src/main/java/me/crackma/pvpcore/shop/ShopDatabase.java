@@ -20,7 +20,7 @@ public class ShopDatabase {
         this.collection = collection;
     }
 
-    public static CompletableFuture<Void> insertCategory(Category category) {
+    public CompletableFuture<Void> insertCategory(Category category) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             Document document = new Document();
             document.put("_id", category.getName());
@@ -43,7 +43,7 @@ public class ShopDatabase {
         return future;
     }
 
-    public static CompletableFuture<Void> deleteCategory(String categoryName) {
+    public CompletableFuture<Void> deleteCategory(String categoryName) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             collection.deleteOne(Filters.eq("_id", categoryName));
             return null;
@@ -55,7 +55,7 @@ public class ShopDatabase {
         return future;
     }
 
-    protected static CompletableFuture<Set<Category>> fetchCategories() {
+    protected CompletableFuture<Set<Category>> fetchCategories() {
         CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
             FindIterable<Document> documents = collection.find();
             Set<Category> categorySet = new HashSet<>();

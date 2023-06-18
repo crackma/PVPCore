@@ -1,6 +1,7 @@
 package me.crackma.pvpcore.shop;
 
 import lombok.Getter;
+import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.Stats;
 import me.crackma.pvpcore.user.User;
 import me.crackma.pvpcore.user.UserDatabase;
@@ -55,7 +56,7 @@ public class CategoryItem {
         Stats stats = user.getStats();
         int price = this.price * amount;
         stats.setGems(stats.getGems() - price);
-        UserDatabase.updateStats(user);
+        PVPCorePlugin.getUserDatabase().updateStats(user);
         String gemOrGems = price == 1 ? "gem" : "gems";
         player.sendMessage("§eYou bought §d" + amount + "§e of §d" + name + " §efor §d" + price + " " + gemOrGems + "§e.");
         ItemStack itemStack = new ItemStack(this.itemStack);

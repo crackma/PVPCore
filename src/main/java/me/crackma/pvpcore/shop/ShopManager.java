@@ -2,6 +2,7 @@ package me.crackma.pvpcore.shop;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+import me.crackma.pvpcore.PVPCorePlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class ShopManager {
     private Set<Category> categorySet = new HashSet<>();
 
     public void init() {
-        ShopDatabase.fetchCategories().thenAccept(categories -> {
+        PVPCorePlugin.getShopDatabase().fetchCategories().thenAccept(categories -> {
             categorySet = categories;
         });
     }

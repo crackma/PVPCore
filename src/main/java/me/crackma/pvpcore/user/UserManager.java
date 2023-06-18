@@ -12,7 +12,6 @@ public class UserManager {
     private Map<UUID, User> userMap = new HashMap<>();
 
     public void addUser(User user) {
-        if (user.getPlayer() == null) return;
         userMap.put(user.getUniqueId(), user);
     }
 
