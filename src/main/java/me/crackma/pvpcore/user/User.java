@@ -17,31 +17,23 @@ import java.util.List;
 import java.util.UUID;
 
 public class User {
-
     @Getter
     private UUID uniqueId;
-
     @Getter
     @Setter
     private Stats stats;
-
     @Getter
     @Setter
     private User lastAttacker;
-
     private BukkitTask bukkitTask;
-
     @Getter
     private List<User> allAttackers = new ArrayList<>();
-
     private PVPCorePlugin plugin;
-
     public User(UUID uniqueId, Stats stats, PVPCorePlugin plugin) {
         this.uniqueId = uniqueId;
         this.stats = stats;
         this.plugin = plugin;
     }
-
     public void restartCombatTimer() {
         if (stats.getConfigCombatTimer() < 1) return;
         stats.setCombatTimer(stats.getConfigCombatTimer());
@@ -58,16 +50,13 @@ public class User {
             }
         }.runTaskTimer(plugin, 0, 20);
     }
-
     public Player getPlayer() {
         return Bukkit.getPlayer(uniqueId);
     }
-
     public void addAttacker(User user) {
         if (this == user || allAttackers.contains(user)) return;
         allAttackers.add(user);
     }
-
     public void kill() {
         Player victim = getPlayer();
         victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_PLAYER_DEATH, 1, 1);
@@ -78,44 +67,35 @@ public class User {
         victim.setFireTicks(0);
         if (bukkitTask != null) bukkitTask.cancel();
         stats.setCombatTimer(0);
-
         for (ItemStack item : victim.getInventory().getContents()) {
             if (item == null) continue;
             victim.getWorld().dropItemNaturally(victim.getLocation(), item);
         }
-
         victim.getInventory().clear();
         victim.getInventory().setArmorContents(null);
-
         victim.teleport(victim.getWorld().getSpawnLocation());
-
         for (PotionEffect effect : victim.getActivePotionEffects()) {
             victim.removePotionEffect(effect.getType());
         }
-
         UserDatabase userDatabase = plugin.getUserDatabase();
-
         Stats victimStats = getStats();
         victim.sendMessage(lastAttacker == null ? "§eYou died." : "§eYou were killed by §d" + lastAttacker.getPlayer().getName() + "§e.");
         setStats(new Stats(victimStats.getKills(), victimStats.getDeaths() + 1, 0, victimStats.getGems(), victimStats.getCooldownMap(), plugin));
-        userDatabase.updateStats(this);
-
+        userDatabase.updateOne(this);
         if (lastAttacker == null) return;
-
         Player attacker = lastAttacker.getPlayer();
         Stats attackerStats = lastAttacker.getStats();
         lastAttacker.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3, attackerStats.getCooldownMap(), plugin));
         attackerStats = lastAttacker.getStats();
         attacker.sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");
         if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + attacker.getName() + " §eis on a streak of §d" + attackerStats.getStreak() + "§e.");
-        userDatabase.updateStats(lastAttacker);
-
+        userDatabase.updateOne(lastAttacker);
         if (allAttackers == null) return;
         for (User assistantUser : allAttackers) {
             if (assistantUser == lastAttacker) continue;
             assistantUser.getStats().setGems(assistantUser.getStats().getGems() + 1);
             assistantUser.getPlayer().sendMessage("§eYou assisted the kill of §d" + victim.getName() + " §eand got §d1 gem§e.");
-            userDatabase.updateStats(assistantUser);
+            userDatabase.updateOne(assistantUser);
         }
         allAttackers.clear();
     }

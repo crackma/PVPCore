@@ -2,11 +2,8 @@ package me.crackma.pvpcore.user;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import lombok.experimental.UtilityClass;
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -14,18 +11,14 @@ import java.util.concurrent.CompletableFuture;
 import static com.mongodb.client.model.Filters.eq;
 
 public class UserDatabase {
-
     private PVPCorePlugin plugin;
-
     private MongoCollection<Document> collection;
-
     public UserDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
         this.plugin = plugin;
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
         this.collection = collection;
     }
-
-    public CompletableFuture<Void> insertUser(UUID uuid) {
+    public CompletableFuture<Void> insert(UUID uuid) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             if (collection.find(eq("_id", uuid.toString())).first() != null) return null;
             Document document = new Document();
@@ -44,7 +37,6 @@ public class UserDatabase {
         });
         return future;
     }
-
     public CompletableFuture<Boolean> exists(UUID uuid) {
         CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> collection.find(eq("_id", uuid.toString())).first() != null);
         future.exceptionally(exception -> {
@@ -53,8 +45,7 @@ public class UserDatabase {
         });
         return future;
     }
-
-    public CompletableFuture<Stats> fetchStats(UUID uuid) {
+    public CompletableFuture<Stats> get(UUID uuid) {
         CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
             Document document = collection.find(eq("_id", uuid.toString())).first();
             if (document == null) return null;
@@ -73,8 +64,7 @@ public class UserDatabase {
         });
         return future;
     }
-
-    public CompletableFuture<Void> updateStats(User user) {
+    public CompletableFuture<Void> updateOne(User user) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             Document document = new Document();
             Stats stats = user.getStats();

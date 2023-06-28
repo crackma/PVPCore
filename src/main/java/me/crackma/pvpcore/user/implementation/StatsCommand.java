@@ -19,52 +19,49 @@ import java.util.Map;
 import java.util.UUID;
 
 public class StatsCommand implements CommandExecutor, TabCompleter {
-
+    private PVPCorePlugin plugin;
+    public StatsCommand(PVPCorePlugin plugin) {
+        this.plugin = plugin;
+        plugin.getCommand("stats").setExecutor(this);
+        plugin.getCommand("stats").setTabCompleter(this);
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player)) {
                 return false;
             }
-
             Player player = (Player) sender;
-            User user = UserManager.getUser(player.getUniqueId());
+            User user = plugin.getUserManager().getUser(player.getUniqueId());
             Stats stats = user.getStats();
-
             sender.sendMessage(statsMessage(stats));
             return true;
         }
-
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         UUID uuid = player.getUniqueId();
-
-        if (UserManager.exists(uuid)) {
-            User user = UserManager.getUser(uuid);
+        if (plugin.getUserManager().exists(uuid)) {
+            User user = plugin.getUserManager().getUser(uuid);
 
             Stats stats = user.getStats();
             sender.sendMessage(statsMessage(stats));
 
             return true;
         }
-        UserDatabase database = PVPCorePlugin.getUserDatabase();
-
-        database.exists(uuid).thenAccept(bool -> {
+        plugin.getUserDatabase().exists(uuid).thenAccept(bool -> {
             if (!bool) {
                 sender.sendMessage("§cEnter a valid user.");
                 return;
             }
-            database.fetchStats(uuid).thenAccept(stats -> sender.sendMessage(statsMessage(stats)));
+            plugin.getUserDatabase().get(uuid).thenAccept(stats -> sender.sendMessage(statsMessage(stats)));
         });
-
         return true;
     }
-
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (Map.Entry<UUID, User> set : UserManager.getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
+                for (Map.Entry<UUID, User> set : plugin.getUserManager().getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");
@@ -80,11 +77,10 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
         }
         return completions;
     }
-
     private String statsMessage(Stats stats) {
         return "Kills: " + stats.getKills() + "\n" +
-                "Deaths: " + stats.getDeaths() + "\n" +
-                "Streak: " + stats.getStreak() + "\n" +
-                "Gems: " + stats.getGems();
+               "Deaths: " + stats.getDeaths() + "\n" +
+               "Streak: " + stats.getStreak() + "\n" +
+               "Gems: " + stats.getGems();
     }
 }

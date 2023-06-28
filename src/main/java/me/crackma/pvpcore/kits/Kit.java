@@ -2,12 +2,7 @@ package me.crackma.pvpcore.kits;
 
 import lombok.Getter;
 import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserDatabase;
-import me.crackma.pvpcore.user.UserManager;
-import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -16,22 +11,16 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Date;
 
 public class Kit {
-
     @Getter
     private final String name;
-
     @Getter
     private int cooldown, inventorySlot;
-
     @Getter
     private Material displayItem;
-
     @Getter
     private ItemStack[] items;
-
     public Kit(String name, int cooldown, int inventorySlot, Material displayItem, ItemStack[] items) {
         this.name = name;
         this.cooldown = cooldown;
@@ -58,7 +47,6 @@ public class Kit {
             this.items = null;
         }
     }
-
     public String getItemsAsBase64() {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -76,28 +64,5 @@ public class Kit {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public void giveTo(HumanEntity player) {
-        User user = UserManager.getUser(player.getUniqueId());
-        if (!user.getStats().canClaim(this)) {
-            long currentTime = new Date().getTime();
-            long cooldownTime = user.getStats().getKitCooldown(this);
-            player.sendMessage("§cYou cannot claim this kit. Time left: " + Utils.formatToDate(cooldownTime - currentTime) + ".");
-            return;
-        }
-        for (ItemStack itemStack : items) {
-            if (itemStack == null) continue;
-            //hoping this fixes the problem where items' values randomly decrease
-            ItemStack itemStack1 = new ItemStack(itemStack);
-            //-1 is returned by #firstEmpty() when an inventory is full
-            if (player.getInventory().firstEmpty() == -1) {
-                player.getWorld().dropItemNaturally(player.getLocation(), itemStack1);
-                continue;
-            }
-            player.getInventory().addItem(itemStack1);
-        }
-        user.getStats().addKitCooldown(this);
-        PVPCorePlugin.getUserDatabase().updateStats(user);
     }
 }

@@ -1,31 +1,21 @@
 package me.crackma.pvpcore.enchanting;
 
 import me.crackma.pvpcore.PVPCorePlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 
 public class EnchantListener implements Listener {
-
-    private PVPCorePlugin plugin;
-
     public EnchantListener(PVPCorePlugin plugin) {
-        this.plugin = plugin;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
-
-    @EventHandler
-    public void onClick(InventoryDragEvent event) {
-        event.setCancelled(true);
-    }
-
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         ItemStack cursorItemStack = event.getCursor();
@@ -33,7 +23,6 @@ public class EnchantListener implements Listener {
         EnchantmentStorageMeta bookMeta = (EnchantmentStorageMeta) cursorItemStack.getItemMeta();
         //no books with multiple or no enchants
         if (bookMeta.getStoredEnchants().size() != 1) return;
-
         //loop through the single enchantment
         for (Map.Entry<Enchantment, Integer> set : bookMeta.getStoredEnchants().entrySet()) {
             Enchantment enchantment = set.getKey();
@@ -48,7 +37,6 @@ public class EnchantListener implements Listener {
             event.setCancelled(true);
         }
     }
-
 }
 
 

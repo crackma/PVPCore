@@ -7,11 +7,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 @UtilityClass
 public class Utils {
-
     public List<String> getMaterialList(String contains) {
         List<String> materialList = new ArrayList<>();
         for (Material material : Material.values()) {
@@ -21,10 +19,8 @@ public class Utils {
         }
         return materialList;
     }
-
     public String formatToDate(long time) {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter.format(time);
     }
 }

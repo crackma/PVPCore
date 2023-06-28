@@ -1,10 +1,8 @@
 package me.crackma.pvpcore.kits.implementation;
 
-import me.crackma.pvpcore.utils.Utils;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.kits.Kit;
-import me.crackma.pvpcore.kits.KitDatabase;
-import me.crackma.pvpcore.kits.KitManager;
+import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,12 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateKitCommand implements CommandExecutor, TabCompleter {
+    private PVPCorePlugin plugin;
+    public CreateKitCommand(PVPCorePlugin plugin) {
+        this.plugin = plugin;
+        plugin.getCommand("createkit").setExecutor(this);
+        plugin.getCommand("createkit").setTabCompleter(this);
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;
         if (args.length < 4) return false;
         Player player = (Player) sender;
-        if (KitManager.getKit(args[0]) != null) {
+        if (plugin.getKitManager().getKit(args[0]) != null) {
             player.sendMessage("§cA kit with that name already exists.");
             return true;
         }
@@ -29,9 +33,8 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
             Material material = Material.valueOf(args[3]);
             if (material == null) return false;
             Kit kit = new Kit(args[0], Integer.parseInt(args[1]) * 1000 /*milliseconds -> seconds*/, Integer.parseInt(args[2]), material, player.getInventory().getContents());
-            KitDatabase kitDatabase = PVPCorePlugin.getKitDatabase();
-            kitDatabase.insertKit(kit).thenAccept(data -> {
-                KitManager.addKit(kit);
+            plugin.getKitDatabase().insertKit(kit).thenAccept(data -> {
+                plugin.getKitManager().addKit(kit);
                 player.sendMessage("§eCreated kit §d" + args[0] + "§e.");
             });
         } catch (NumberFormatException exception) {
@@ -39,7 +42,6 @@ public class CreateKitCommand implements CommandExecutor, TabCompleter {
         }
         return true;
     }
-
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();

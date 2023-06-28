@@ -3,8 +3,6 @@ package me.crackma.pvpcore.user.implementation;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.Stats;
 import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserDatabase;
-import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -18,15 +16,17 @@ import java.util.Map;
 import java.util.UUID;
 
 public class EditStatsCommand implements CommandExecutor, TabCompleter {
-    private UserDatabase userDatabase;
-    public EditStatsCommand() {
-        userDatabase = PVPCorePlugin.getUserDatabase();
+    private PVPCorePlugin plugin;
+    public EditStatsCommand(PVPCorePlugin plugin) {
+        this.plugin = plugin;
+        plugin.getCommand("editstats").setExecutor(this);
+        plugin.getCommand("editstats").setTabCompleter(this);
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 5) return false;
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-        User user = UserManager.getUser(player.getUniqueId());
+        User user = plugin.getUserManager().getUser(player.getUniqueId());
         if (user == null) return false;
         Stats stats = user.getStats();
         try {
@@ -34,20 +34,19 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
             stats.setDeaths(Integer.parseInt(args[2]));
             stats.setStreak(Integer.parseInt(args[3]));
             stats.setGems(Integer.parseInt(args[4]));
-            userDatabase.updateStats(user);
+            plugin.getUserDatabase().updateOne(user);
             sender.sendMessage("updated stats of " + player.getName() + " to " + stats);
         } catch (NumberFormatException e) {
             return false;
         }
         return true;
     }
-
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (Map.Entry<UUID, User> set : UserManager.getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
+                for (Map.Entry<UUID, User> set : plugin.getUserManager().getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");

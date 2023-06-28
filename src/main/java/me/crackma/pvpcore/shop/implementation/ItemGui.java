@@ -15,19 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemGui extends Gui {
-
+    private PVPCorePlugin plugin;
     private final CategoryItem categoryItem;
-
-    public ItemGui(CategoryItem categoryItem) {
+    public ItemGui(PVPCorePlugin plugin, CategoryItem categoryItem) {
         super();
+        this.plugin = plugin;
         this.categoryItem = categoryItem;
     }
-
     @Override
     public Inventory createInventory() {
         return Bukkit.createInventory(null, 27);
     }
-
     @Override
     public void decorate() {
         addItem(10, 1);
@@ -39,7 +37,6 @@ public class ItemGui extends Gui {
         addItem(16, 64);
         super.decorate();
     }
-
     private void addItem(int inventorySlot, int amount) {
         ItemStack itemStack = new ItemStack(categoryItem.getItemStack().getType());
         itemStack.setAmount(amount);
@@ -54,7 +51,7 @@ public class ItemGui extends Gui {
         this.addButton(inventorySlot, new GuiButton().
                 creator(unused -> itemStack).
                 leftConsumer(event -> {
-                    categoryItem.giveTo(event.getWhoClicked(), amount);
+                    plugin.getShopManager().giveCategoryItem(categoryItem, event.getWhoClicked(), amount);
                 }));
         super.decorate();
     }

@@ -12,17 +12,13 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class KitDatabase {
-
     private MongoCollection<Document> collection;
-
     private PVPCorePlugin plugin;
-
     public KitDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
         this.plugin = plugin;
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("kit_collection"));
         this.collection = collection;
     }
-
     public CompletableFuture<Void> insertKit(Kit kit) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             Document document = new Document();
@@ -40,7 +36,6 @@ public class KitDatabase {
         });
         return future;
     }
-
     protected CompletableFuture<Set<Kit>> fetchKits() {
         CompletableFuture<Set<Kit>> future = CompletableFuture.supplyAsync(() -> {
             FindIterable<Document> documents = collection.find();
@@ -64,7 +59,6 @@ public class KitDatabase {
         });
         return future;
     }
-
     public CompletableFuture<Void> deleteKit(String kitName) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
             collection.deleteOne(Filters.eq("_id", kitName));

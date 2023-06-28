@@ -17,21 +17,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class CategoryItem {
-
     @Getter
     private String name;
     @Getter
     private ItemStack itemStack;
     @Getter
     private int inventorySlot, price;
-
     public CategoryItem(String name, ItemStack itemStack, int inventorySlot, int price) {
         this.name = name;
         this.itemStack = itemStack;
         this.inventorySlot = inventorySlot;
         this.price = price;
     }
-
     public CategoryItem(String fromString) {
         String[] categoryItem = fromString.split(",");
         this.name = categoryItem[0];
@@ -46,28 +43,6 @@ public class CategoryItem {
             e.printStackTrace();
         }
     }
-
-    public void giveTo(HumanEntity player, int amount) {
-        User user = UserManager.getUser(player.getUniqueId());
-        if (user.getStats().getGems() < price) {
-            player.sendMessage("§cYou cannot afford that.");
-            return;
-        }
-        Stats stats = user.getStats();
-        int price = this.price * amount;
-        stats.setGems(stats.getGems() - price);
-        PVPCorePlugin.getUserDatabase().updateStats(user);
-        String gemOrGems = price == 1 ? "gem" : "gems";
-        player.sendMessage("§eYou bought §d" + amount + "§e of §d" + name + " §efor §d" + price + " " + gemOrGems + "§e.");
-        ItemStack itemStack = new ItemStack(this.itemStack);
-        itemStack.setAmount(amount);
-        if (player.getInventory().firstEmpty() == -1) {
-            player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-            return;
-        }
-        player.getInventory().addItem(itemStack);
-    }
-
     public String toString() {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -82,6 +57,4 @@ public class CategoryItem {
             return null;
         }
     }
-
-
 }

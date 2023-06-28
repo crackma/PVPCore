@@ -8,19 +8,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class KitGui extends Gui {
-
     private final Kit kit;
-
     public KitGui(Kit kit) {
         super();
         this.kit = kit;
     }
-
     @Override
     public Inventory createInventory() {
         return Bukkit.createInventory(null, 27);
     }
-
     @Override
     public void decorate() {
         int slot = 0;

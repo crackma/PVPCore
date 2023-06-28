@@ -3,9 +3,7 @@ package me.crackma.pvpcore.kits.implementation;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.gui.Gui;
 import me.crackma.pvpcore.gui.GuiButton;
-import me.crackma.pvpcore.gui.GuiManager;
 import me.crackma.pvpcore.kits.Kit;
-import me.crackma.pvpcore.kits.KitManager;
 import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -17,17 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KitsGui extends Gui {
+    private PVPCorePlugin plugin;
+    public KitsGui(PVPCorePlugin plugin) {
+        this.plugin = plugin;
+    }
     @Override
     public Inventory createInventory() {
-        return Bukkit.createInventory(null, PVPCorePlugin.getInstance().getConfig().getInt("kit_gui_size"));
+        return Bukkit.createInventory(null, plugin.getConfig().getInt("kit_gui_size"));
     }
-
-    @Override
-    public void decorate() {
-        KitManager.getKitSet().forEach(kit -> addKit(kit));
-        super.decorate();
-    }
-
     private void addKit(Kit kit) {
         ItemStack itemStack = new ItemStack(kit.getDisplayItem());
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -39,10 +34,15 @@ public class KitsGui extends Gui {
         itemMeta.setLore(lore);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemStack.setItemMeta(itemMeta);
-        this.addButton(kit.getInventorySlot(), new GuiButton().
+        addButton(kit.getInventorySlot(), new GuiButton().
                 creator(unused -> itemStack).
-                leftConsumer(event -> kit.giveTo(event.getWhoClicked())).
-                rightConsumer(event -> GuiManager.openGUI(new KitGui(kit), event.getWhoClicked())));
+                leftConsumer(event -> plugin.getKitManager().giveKit(event.getWhoClicked(), kit)).
+                rightConsumer(event -> plugin.getGuiManager().openGUI(new KitGui(kit), event.getWhoClicked())));
+        super.decorate();
+    }
+    @Override
+    public void decorate() {
+        plugin.getKitManager().getKitSet().forEach(this::addKit);
         super.decorate();
     }
 }

@@ -10,24 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Stats {
-
     @Getter
     @Setter
     private int kills, deaths, streak, gems;
-
     @Getter
     @Setter
     private int combatTimer = 0;
-
     @Getter
     private int configCombatTimer;
-
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
     private Map<String, Long> cooldownMap = new HashMap<>();
-
     private PVPCorePlugin plugin;
-
     public Stats(int kills, int deaths, int streak, int gems, String cooldowns, PVPCorePlugin plugin) {
         this.kills = kills;
         this.deaths = deaths;
@@ -52,25 +46,20 @@ public class Stats {
         this.plugin = plugin;
         this.configCombatTimer = plugin.getConfig().getInt("combat_timer");
     }
-
     public boolean isInCombat() {
         return combatTimer > 0;
     }
-
     public void addKitCooldown(Kit kit) {
         cooldownMap.put(kit.getName(), new Date().getTime() + kit.getCooldown());
     }
-
     public long getKitCooldown(Kit kit) {
         return cooldownMap.get(kit.getName());
     }
-
     public boolean canClaim(Kit kit) {
         Long cooldown = cooldownMap.get(kit.getName());
         if (cooldown == null) return true;
         return cooldown < new Date().getTime();
     }
-
     public String getCooldownMapAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, Long> set : cooldownMap.entrySet()) {
@@ -78,9 +67,7 @@ public class Stats {
         }
         return stringBuilder.toString();
     }
-
     public String toString() {
         return kills + ", " + deaths + ", " + streak + ", " + gems + ", " + combatTimer;
     }
-
 }

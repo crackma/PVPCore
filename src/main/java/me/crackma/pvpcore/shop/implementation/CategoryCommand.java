@@ -18,25 +18,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryCommand implements CommandExecutor, TabCompleter {
+    private PVPCorePlugin plugin;
+    public CategoryCommand(PVPCorePlugin plugin) {
+        this.plugin = plugin;
+        plugin.getCommand("category").setExecutor(this);
+        plugin.getCommand("category").setTabCompleter(this);
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) return false;
         Category category;
         Material material;
         String description;
-        ShopDatabase shopDatabase = PVPCorePlugin.getShopDatabase();
+        ShopManager shopManager = plugin.getShopManager();
+        ShopDatabase shopDatabase = plugin.getShopDatabase();
         switch (args[0].toLowerCase()) {
             case "help":
-                sender.sendMessage("§7/category create <name> <displayItem> <inventorySlot> <description>\n" +
-                                      "§7/category edit <name> displayItem/inventorySlot/description <new> \n" +
-                                      "§7/category addItem <categoryName> <itemName> <inventorySlot> <price> (hold an item) \n" +
-                                      "§7/category removeItem <categoryName> <itemName>\n" +
-                                      "§7/category remove <name>\n");
+                sender.sendMessage("§c/category create [<name>] [<displayItem>] [<inventorySlot>] [<description>]§f\n" +
+                                      "§c/category edit [<name>] displayItem/inventorySlot/description [<new>]§f\n" +
+                                      "§c/category addItem [<categoryName>] [<itemName>] [<inventorySlot>] [<price>] (hold an item)§f\n" +
+                                      "§c/category removeItem [<categoryName>] [<itemName>]§f\n" +
+                                      "§c/category remove [<name>]\n");
                 return true;
             //category create <name> <displayItem> <inventorySlot> <description>
             case "create":
                 if (args.length < 5) return false;
-                if (ShopManager.getCategory(args[1]) != null) {
+                if (shopManager.getCategory(args[1]) != null) {
                     sender.sendMessage("§cA category with that name already exists.");
                     return true;
                 }
@@ -48,13 +55,13 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 } catch (NumberFormatException exception) {
                     return false;
                 }
-                PVPCorePlugin.getShopDatabase().insertCategory(category);
+                shopDatabase.insertCategory(category);
                 sender.sendMessage("§eCreated category §d" + args[1] + "§e.");
                 return true;
             //category edit <name> displayItem/inventorySlot/description <new>
             case "edit":
                 if (args.length < 4) return false;
-                category = ShopManager.getCategory(args[1]);
+                category = shopManager.getCategory(args[1]);
                 if (category == null) return false;
                 switch (args[2].toLowerCase()) {
                     case "displayitem":
@@ -81,7 +88,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
             case "additem":
                 if (!(sender instanceof Player)) return true;
                 if (args.length < 5) return false;
-                category = ShopManager.getCategory(args[1]);
+                category = shopManager.getCategory(args[1]);
                 if (category == null) return false;
                 Player player = (Player) sender;
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
@@ -98,7 +105,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
             //category removeItem <categoryName> <itemName>
             case "removeitem":
                 if (args.length < 3) return false;
-                category = ShopManager.getCategory(args[1]);
+                category = shopManager.getCategory(args[1]);
                 if (category == null) return false;
                 category.removeItem(args[2]);
                 sender.sendMessage("§eRemoved item from category §d" + args[1] + "§e.");
@@ -107,10 +114,10 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
             //category remove <name>
             case "remove":
                 if (args.length < 2) return false;
-                category = ShopManager.getCategory(args[1]);
+                category = shopManager.getCategory(args[1]);
                 if (category == null) return false;
                 shopDatabase.deleteCategory(category.getName());
-                ShopManager.deleteCategory(category);
+                shopManager.deleteCategory(category);
                 sender.sendMessage("§eRemoved category §d" + args[1] + "§e.");
                 return true;
             default:
@@ -118,7 +125,6 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
         }
 
     }
-
     public String convertArray(String[] stringArray, String delimiter, int exclude) {
         StringBuilder stringBuilder = new StringBuilder();
         int current = 0;
@@ -129,7 +135,6 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
         }
         return stringBuilder.toString();
     }
-
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String alias, String[] args) {
         List<String> completions = new ArrayList<>();
@@ -142,6 +147,8 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
             completions.add("remove");
             return completions;
         }
+        ShopManager shopManager = plugin.getShopManager();
+        ShopDatabase shopDatabase = plugin.getShopDatabase();
         switch (args[0].toLowerCase()) {
             //category create <name> <displayItem> <inventorySlot> <description>
             case "create":
@@ -152,7 +159,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 break;
             //category edit <name> displayItem/inventorySlot/description <new>
             case "edit":
-                if (args.length == 2) ShopManager.getCategorySet().forEach(category1 -> completions.add(category1.getName()));
+                if (args.length == 2) shopManager.getCategorySet().forEach(category1 -> completions.add(category1.getName()));
                 if (args.length == 3) {
                     completions.add("displayItem");
                     completions.add("inventorySlot");
@@ -163,11 +170,11 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                     case "displayitem":
                         return Utils.getMaterialList(args[2]);
                     case "inventoryslot":
-                        category = ShopManager.getCategory(args[1]);
+                        category = shopManager.getCategory(args[1]);
                         completions.add(category == null ? "<inventorySlot>" : category.getInventorySlot() + "");
                         break;
                     case "description":
-                        category = ShopManager.getCategory(args[1]);
+                        category = shopManager.getCategory(args[1]);
                         completions.add(category == null ? "<description>" : category.getDescription());
                         break;
                     default:
@@ -176,21 +183,21 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 break;
             //category addItem <categoryName> <itemName> <inventorySlot> <price>
             case "additem":
-                if (args.length == 2) ShopManager.getCategorySet().forEach(category1 -> completions.add(category1.getName()));
+                if (args.length == 2) shopManager.getCategorySet().forEach(category1 -> completions.add(category1.getName()));
                 if (args.length == 3) completions.add("<itemName>");
                 if (args.length == 4) completions.add("<inventorySlot>");
                 if (args.length == 5) completions.add("<price>");
                 break;
             //category removeItem <categoryName> <itemName>
             case "removeitem":
-                if (args.length == 2) ShopManager.getCategorySet().forEach(category2 -> completions.add(category2.getName()));
-                category = ShopManager.getCategory(args[1]);
+                if (args.length == 2) shopManager.getCategorySet().forEach(category2 -> completions.add(category2.getName()));
+                category = shopManager.getCategory(args[1]);
                 if (category == null) break;
                 if (args.length == 3) category.getItems().forEach(item -> completions.add(item.getName()));
                 break;
             //category remove <name>
             case "remove":
-                if (args.length == 2) ShopManager.getCategorySet().forEach(category3 -> completions.add(category3.getName()));
+                if (args.length == 2) shopManager.getCategorySet().forEach(category3 -> completions.add(category3.getName()));
                 break;
         }
         return completions;
