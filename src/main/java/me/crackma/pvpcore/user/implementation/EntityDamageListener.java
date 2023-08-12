@@ -35,19 +35,19 @@ public class EntityDamageListener implements Listener {
                 if (!(projectile.getShooter() instanceof Player)) return;
                 attacker = (Player) projectile.getShooter();
                 attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
-
+                attackerUser.restartCombatTimer();
                 victimUser.setLastAttacker(attackerUser);
                 victimUser.addAttacker(attackerUser);
             }
-            if (!(newEvent.getDamager() instanceof Player)) return;
-            attacker = (Player) newEvent.getDamager();
-            attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
-            attackerUser.restartCombatTimer();
-            victimUser.setLastAttacker(attackerUser);
-            victimUser.addAttacker(attackerUser);
+            if (newEvent.getDamager() instanceof Player) {
+                attacker = (Player) newEvent.getDamager();
+                attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
+                attackerUser.restartCombatTimer();
+                victimUser.setLastAttacker(attackerUser);
+                victimUser.addAttacker(attackerUser);
+            }
         }
         if (victim.getHealth() - event.getFinalDamage() > 0) return;
-        //after death
         event.setCancelled(true);
         victimUser.kill();
     }

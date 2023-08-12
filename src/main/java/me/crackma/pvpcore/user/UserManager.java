@@ -26,11 +26,11 @@ public class UserManager {
             	List<String> linesWithStats = new ArrayList<>();
             	Stats stats = user.getStats();
             	for (String line : translatedLines) {
-            		line = line.replace("%kills%", stats.getKills() + "");
-            		line = line.replace("%deaths%", stats.getDeaths() + "");
-            		line = line.replace("%streak%", stats.getStreak() + "");
-            		line = line.replace("%gems%", stats.getGems() + "");
-            		line = line.replace("%timer%", stats.getCombatTimer() + "");
+            		line = line.replace("%kills%", stats.getKills() + "")
+            				.replace("%deaths%", stats.getDeaths() + "")
+            				.replace("%streak%", stats.getStreak() + "")
+            				.replace("%gems%", stats.getGems() + "")
+            				.replace("%timer%", stats.getCombatTimer() + "");
             		linesWithStats.add(line);
             	}
             	try {

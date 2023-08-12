@@ -1,8 +1,8 @@
 package me.crackma.pvpcore.user.implementation;
 
-import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.user.Stats;
-import me.crackma.pvpcore.user.User;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -10,10 +10,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.user.Stats;
+import me.crackma.pvpcore.user.User;
 
 public class EditStatsCommand implements CommandExecutor, TabCompleter {
     private PVPCorePlugin plugin;

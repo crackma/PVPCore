@@ -11,10 +11,8 @@ import java.util.concurrent.CompletableFuture;
 import static com.mongodb.client.model.Filters.eq;
 
 public class UserDatabase {
-    private PVPCorePlugin plugin;
     private MongoCollection<Document> collection;
     public UserDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
-        this.plugin = plugin;
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
         this.collection = collection;
     }
@@ -28,7 +26,7 @@ public class UserDatabase {
             document.put("gems", 0);
             document.put("kitCooldowns", null);
             collection.insertOne(document);
-            return new User(uuid, new Stats(0, 0, 0, 0, null));
+            return new User(uuid, new Stats(0, 0, 0, 0, ""));
         }
         Document document = collection.find(eq("_id", uuid.toString())).first();
         if (document == null) return null;

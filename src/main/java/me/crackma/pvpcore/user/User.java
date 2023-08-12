@@ -39,11 +39,11 @@ public class User {
         this.stats = stats;
     }
     public void restartCombatTimer() {
-        if (stats.getConfigCombatTimer() < 1) return;
+        if (Stats.getConfigCombatTimer() < 1) return;
         if (!stats.isInCombat()) {
         	Bukkit.getPlayer(uniqueId).sendMessage("§7You are now in combat.");
         }
-        stats.setCombatTimer(stats.getConfigCombatTimer());
+        stats.setCombatTimer(Stats.getConfigCombatTimer());
         if (bukkitTask != null) bukkitTask.cancel();
         bukkitTask = new BukkitRunnable() {
             @Override
@@ -89,15 +89,16 @@ public class User {
         }
         PVPCorePlugin plugin = PVPCorePlugin.getPlugin();
         UserDatabase userDatabase = plugin.getUserDatabase();
-        Stats victimStats = getStats();
         victim.sendMessage(lastAttacker == null ? "§eYou died." : "§eYou were killed by §d" + lastAttacker.getPlayer().getName() + "§e.");
-        setStats(new Stats(victimStats.getKills(), victimStats.getDeaths() + 1, 0, victimStats.getGems(), victimStats.getCooldownMap(), plugin));
+        stats.setDeaths(stats.getDeaths() + 1);
+        stats.setStreak(0);
         userDatabase.updateOne(this);
         if (lastAttacker == null) return;
+        if (lastAttacker == this) return;
         Player attacker = lastAttacker.getPlayer();
         Stats attackerStats = lastAttacker.getStats();
-        lastAttacker.setStats(new Stats(attackerStats.getKills() + 1, attackerStats.getDeaths(), attackerStats.getStreak() + 1, attackerStats.getGems() + 3, attackerStats.getCooldownMap(), plugin));
-        attackerStats = lastAttacker.getStats();
+        attackerStats.setKills(attackerStats.getKills() + 1);
+        attackerStats.setStreak(attackerStats.getStreak() + 1);
         attacker.sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");
         if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + attacker.getName() + " §eis on a streak of §d" + attackerStats.getStreak() + "§e.");
         userDatabase.updateOne(lastAttacker);

@@ -17,7 +17,7 @@ public class Stats {
     @Setter
     private int combatTimer = 0;
     @Getter
-    private int configCombatTimer;
+    public static int configCombatTimer = PVPCorePlugin.getPlugin().getConfig().getInt("combat_timer");
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
     private Map<String, Long> cooldownMap = new HashMap<>();
@@ -27,21 +27,20 @@ public class Stats {
         this.streak = streak;
         this.gems = gems;
         if (cooldowns == null) return;
+        if (cooldowns.isBlank()) return;
         String[] splitCooldowns = cooldowns.split(";");
         for (String cooldown : splitCooldowns) {
             String[] splitCooldown = cooldown.split(":");
             cooldownMap.put(splitCooldown[0], Long.valueOf(splitCooldown[1]));
         }
-        this.configCombatTimer = PVPCorePlugin.getPlugin().getConfig().getInt("combat_timer");
     }
-    public Stats(int kills, int deaths, int streak, int gems, Map<String, Long> cooldownMap, PVPCorePlugin plugin) {
+    public Stats(int kills, int deaths, int streak, int gems, Map<String, Long> cooldownMap) {
         this.kills = kills;
         this.deaths = deaths;
         this.streak = streak;
         this.gems = gems;
         if (cooldownMap == null) return;
         this.cooldownMap = cooldownMap;
-        this.configCombatTimer = plugin.getConfig().getInt("combat_timer");
     }
     public boolean isInCombat() {
         return combatTimer > 0;

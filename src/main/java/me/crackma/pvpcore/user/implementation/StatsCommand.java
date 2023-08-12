@@ -1,8 +1,9 @@
 package me.crackma.pvpcore.user.implementation;
 
-import me.crackma.pvpcore.user.Stats;
-import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.PVPCorePlugin;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -11,10 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.user.Stats;
+import me.crackma.pvpcore.user.User;
 
 public class StatsCommand implements CommandExecutor, TabCompleter {
     private PVPCorePlugin plugin;
@@ -26,9 +26,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            if (!(sender instanceof Player)) {
-                return false;
-            }
+            if (!(sender instanceof Player)) return true;
             Player player = (Player) sender;
             User user = plugin.getUserManager().get(player.getUniqueId());
             Stats stats = user.getStats();
@@ -39,10 +37,8 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
         UUID uuid = player.getUniqueId();
         if (plugin.getUserManager().get(uuid) != null) {
             User user = plugin.getUserManager().get(uuid);
-
             Stats stats = user.getStats();
             sender.sendMessage(statsMessage(stats));
-
             return true;
         }
         plugin.getUserDatabase().exists(uuid).thenAccept(bool -> {
