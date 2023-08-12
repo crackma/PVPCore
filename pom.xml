@@ -3,19 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>me.crackma</groupId>
     <artifactId>PVPCore</artifactId>
     <version>0-0</version>
     <packaging>jar</packaging>
-
     <name>PVPCore</name>
-
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -48,9 +44,31 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\frandma\Documents\mcserver\plugins</outputDirectory>
+                    <outputDirectory>D:\minecraft\server\plugins</outputDirectory>
                 </configuration>
             </plugin>
+                    <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <relocations>
+                    <relocation>
+                        <pattern>fr.mrmicky.fastboard</pattern>
+                        <!-- Replace 'com.yourpackage' with the package of your plugin ! -->
+                        <shadedPattern>me.crackma.fastboard</shadedPattern>
+                    </relocation>
+                </relocations>
+            </configuration>
+        </plugin>
         </plugins>
         <resources>
             <resource>
@@ -59,7 +77,6 @@
             </resource>
         </resources>
     </build>
-
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
@@ -74,12 +91,11 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -103,5 +119,10 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.7</version>
         </dependency>
+		<dependency>
+        	<groupId>fr.mrmicky</groupId>
+        	<artifactId>fastboard</artifactId>
+        	<version>2.0.0</version>
+    	</dependency>
     </dependencies>
 </project>

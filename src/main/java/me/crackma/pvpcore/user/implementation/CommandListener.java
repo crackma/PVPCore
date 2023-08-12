@@ -19,7 +19,7 @@ public class CommandListener implements Listener {
     }
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+        User user = plugin.getUserManager().get(event.getPlayer().getUniqueId());
         if (!user.getStats().isInCombat()) return;
         for (String blockedCommand : blockedCommands) {
             if (!event.getMessage().startsWith(blockedCommand)) continue;

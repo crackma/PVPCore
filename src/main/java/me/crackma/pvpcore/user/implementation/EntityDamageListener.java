@@ -2,7 +2,6 @@ package me.crackma.pvpcore.user.implementation;
 
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -23,7 +22,7 @@ public class EntityDamageListener implements Listener {
         if (event.isCancelled()) return;
         if (!(event.getEntity() instanceof Player)) return;
         Player victim = (Player) event.getEntity();
-        User victimUser = plugin.getUserManager().getUser(victim.getUniqueId());
+        User victimUser = plugin.getUserManager().get(victim.getUniqueId());
         if (victimUser == null) return;
         victimUser.restartCombatTimer();
         Player attacker;
@@ -35,14 +34,14 @@ public class EntityDamageListener implements Listener {
                 Projectile projectile = (Projectile) newEvent.getDamager();
                 if (!(projectile.getShooter() instanceof Player)) return;
                 attacker = (Player) projectile.getShooter();
-                attackerUser = plugin.getUserManager().getUser(attacker.getUniqueId());
+                attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
 
                 victimUser.setLastAttacker(attackerUser);
                 victimUser.addAttacker(attackerUser);
             }
             if (!(newEvent.getDamager() instanceof Player)) return;
             attacker = (Player) newEvent.getDamager();
-            attackerUser = plugin.getUserManager().getUser(attacker.getUniqueId());
+            attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
             attackerUser.restartCombatTimer();
             victimUser.setLastAttacker(attackerUser);
             victimUser.addAttacker(attackerUser);

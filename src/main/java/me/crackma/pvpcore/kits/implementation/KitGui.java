@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 public class KitGui extends Gui {
     private final Kit kit;
     public KitGui(Kit kit) {
-        super();
         this.kit = kit;
+        this.createInventory();
     }
     @Override
     public Inventory createInventory() {

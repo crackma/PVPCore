@@ -1,12 +1,12 @@
 package me.crackma.pvpcore.shop;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import org.bukkit.Material;
+
+import lombok.Getter;
+import lombok.Setter;
 
 public class Category {
 

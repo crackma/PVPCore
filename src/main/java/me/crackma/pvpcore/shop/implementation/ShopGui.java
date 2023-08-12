@@ -1,11 +1,8 @@
 package me.crackma.pvpcore.shop.implementation;
 
-import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.gui.GuiButton;
-import me.crackma.pvpcore.shop.Category;
-import me.crackma.pvpcore.shop.ShopManager;
-import me.crackma.pvpcore.gui.Gui;
-import me.crackma.pvpcore.gui.GuiManager;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
@@ -13,17 +10,20 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.gui.Gui;
+import me.crackma.pvpcore.gui.GuiButton;
+import me.crackma.pvpcore.shop.Category;
 
 public class ShopGui extends Gui {
     private PVPCorePlugin plugin;
     public ShopGui(PVPCorePlugin plugin) {
+        super();
         this.plugin = plugin;
     }
     @Override
     public Inventory createInventory() {
-        return Bukkit.createInventory(null, plugin.getConfig().getInt("shop_gui_size"));
+    	return Bukkit.createInventory(null, PVPCorePlugin.getPlugin().getConfig().getInt("shop_gui_size"));
     }
     @Override
     public void decorate() {

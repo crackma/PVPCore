@@ -2,9 +2,7 @@ package me.crackma.pvpcore.user.implementation;
 
 import me.crackma.pvpcore.user.Stats;
 import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserDatabase;
 import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -32,15 +30,15 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
                 return false;
             }
             Player player = (Player) sender;
-            User user = plugin.getUserManager().getUser(player.getUniqueId());
+            User user = plugin.getUserManager().get(player.getUniqueId());
             Stats stats = user.getStats();
             sender.sendMessage(statsMessage(stats));
             return true;
         }
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
         UUID uuid = player.getUniqueId();
-        if (plugin.getUserManager().exists(uuid)) {
-            User user = plugin.getUserManager().getUser(uuid);
+        if (plugin.getUserManager().get(uuid) != null) {
+            User user = plugin.getUserManager().get(uuid);
 
             Stats stats = user.getStats();
             sender.sendMessage(statsMessage(stats));
@@ -61,7 +59,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (Map.Entry<UUID, User> set : plugin.getUserManager().getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
+                for (User user : plugin.getUserManager().getUsers()) completions.add(user.getPlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");

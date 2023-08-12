@@ -21,7 +21,7 @@ public class KitsGui extends Gui {
     }
     @Override
     public Inventory createInventory() {
-        return Bukkit.createInventory(null, plugin.getConfig().getInt("kit_gui_size"));
+    	return Bukkit.createInventory(null, PVPCorePlugin.getPlugin().getConfig().getInt("kit_gui_size"));
     }
     private void addKit(Kit kit) {
         ItemStack itemStack = new ItemStack(kit.getDisplayItem());

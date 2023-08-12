@@ -26,7 +26,7 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 5) return false;
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-        User user = plugin.getUserManager().getUser(player.getUniqueId());
+        User user = plugin.getUserManager().get(player.getUniqueId());
         if (user == null) return false;
         Stats stats = user.getStats();
         try {
@@ -46,7 +46,7 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (Map.Entry<UUID, User> set : plugin.getUserManager().getUserMap().entrySet()) completions.add(set.getValue().getPlayer().getName());
+                for (User user : plugin.getUserManager().getUsers()) completions.add(user.getPlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");

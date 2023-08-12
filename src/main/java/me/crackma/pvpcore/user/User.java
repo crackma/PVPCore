@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import fr.mrmicky.fastboard.FastBoard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +31,18 @@ public class User {
     private BukkitTask bukkitTask;
     @Getter
     private List<User> allAttackers = new ArrayList<>();
-    private PVPCorePlugin plugin;
-    public User(UUID uniqueId, Stats stats, PVPCorePlugin plugin) {
+    @Getter
+    @Setter
+    private FastBoard board;
+    public User(UUID uniqueId, Stats stats) {
         this.uniqueId = uniqueId;
         this.stats = stats;
-        this.plugin = plugin;
     }
     public void restartCombatTimer() {
         if (stats.getConfigCombatTimer() < 1) return;
+        if (!stats.isInCombat()) {
+        	Bukkit.getPlayer(uniqueId).sendMessage("§7You are now in combat.");
+        }
         stats.setCombatTimer(stats.getConfigCombatTimer());
         if (bukkitTask != null) bukkitTask.cancel();
         bukkitTask = new BukkitRunnable() {
@@ -48,7 +55,7 @@ public class User {
                 getPlayer().sendMessage("§7You are no longer in combat.");
                 this.cancel();
             }
-        }.runTaskTimer(plugin, 0, 20);
+        }.runTaskTimer(PVPCorePlugin.getPlugin(), 0, 20);
     }
     public Player getPlayer() {
         return Bukkit.getPlayer(uniqueId);
@@ -73,10 +80,14 @@ public class User {
         }
         victim.getInventory().clear();
         victim.getInventory().setArmorContents(null);
-        victim.teleport(victim.getWorld().getSpawnLocation());
+        Location loc = victim.getWorld().getSpawnLocation();
+        loc.setX(loc.getX() + 0.5);
+        loc.setZ(loc.getZ() + 0.5);
+        victim.teleport(loc);
         for (PotionEffect effect : victim.getActivePotionEffects()) {
             victim.removePotionEffect(effect.getType());
         }
+        PVPCorePlugin plugin = PVPCorePlugin.getPlugin();
         UserDatabase userDatabase = plugin.getUserDatabase();
         Stats victimStats = getStats();
         victim.sendMessage(lastAttacker == null ? "§eYou died." : "§eYou were killed by §d" + lastAttacker.getPlayer().getName() + "§e.");

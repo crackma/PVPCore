@@ -1,7 +1,13 @@
 package me.crackma.pvpcore;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+
 import lombok.Getter;
 import me.crackma.pvpcore.enchanting.EnchantListener;
 import me.crackma.pvpcore.gui.GuiListener;
@@ -21,9 +27,10 @@ import me.crackma.pvpcore.user.implementation.CommandListener;
 import me.crackma.pvpcore.user.implementation.EditStatsCommand;
 import me.crackma.pvpcore.user.implementation.EntityDamageListener;
 import me.crackma.pvpcore.user.implementation.UserListener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PVPCorePlugin extends JavaPlugin {
+	@Getter
+	private static PVPCorePlugin plugin;
     @Getter
     private GuiManager guiManager;
     @Getter
@@ -42,10 +49,12 @@ public final class PVPCorePlugin extends JavaPlugin {
     public void onEnable() {
         getDataFolder().mkdirs();
         this.saveDefaultConfig();
-        guiManager = new GuiManager();
+        plugin = this;
+        Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
         MongoDatabase mongoDatabase = MongoClients.create(getConfig().getString("connection_uri")).getDatabase(getConfig().getString("database"));
+        guiManager = new GuiManager();
         userDatabase = new UserDatabase(this, mongoDatabase);
-        userManager = new UserManager();
+        userManager = new UserManager(this);
         kitDatabase = new KitDatabase(this, mongoDatabase);
         shopDatabase = new ShopDatabase(this, mongoDatabase);
         kitManager = new KitManager(this);

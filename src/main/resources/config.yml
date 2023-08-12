@@ -5,6 +5,15 @@ shop_gui_size: 27
 # combat timer (seconds)
 combat_timer: 15
 # commands that are blocked if a player is in combat
+# placeholders: %kills%, %deaths%, %streak%, %gems%, %timer%
+scoreboard:
+   title: "&eKitPVP"
+   lines:
+      - "Kills: %kills%"
+      - "Deaths: %deaths%"
+      - "Streak: %streak%"
+      - "Gems: %gems%"
+      - "Combat: %timer%"
 blocked_commands:
   - "/spawn"
   - "/kit"

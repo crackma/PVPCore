@@ -18,9 +18,8 @@ public class UserDatabase {
         MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
         this.collection = collection;
     }
-    public CompletableFuture<Void> insert(UUID uuid) {
-        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            if (collection.find(eq("_id", uuid.toString())).first() != null) return null;
+    public User getOrCreate(UUID uuid) {
+        if (collection.find(eq("_id", uuid.toString())).first() == null) {
             Document document = new Document();
             document.put("_id", uuid.toString());
             document.put("kills", 0);
@@ -29,13 +28,17 @@ public class UserDatabase {
             document.put("gems", 0);
             document.put("kitCooldowns", null);
             collection.insertOne(document);
-            return null;
-        });
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
+            return new User(uuid, new Stats(0, 0, 0, 0, null));
+        }
+        Document document = collection.find(eq("_id", uuid.toString())).first();
+        if (document == null) return null;
+        return new User(uuid, new Stats(
+                document.getInteger("kills"),
+                document.getInteger("deaths"),
+                document.getInteger("streak"),
+                document.getInteger("gems"),
+                document.getString("kitCooldowns"))
+        );
     }
     public CompletableFuture<Boolean> exists(UUID uuid) {
         CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> collection.find(eq("_id", uuid.toString())).first() != null);
@@ -54,8 +57,7 @@ public class UserDatabase {
                     document.getInteger("deaths"),
                     document.getInteger("streak"),
                     document.getInteger("gems"),
-                    document.getString("kitCooldowns"),
-                    plugin
+                    document.getString("kitCooldowns")
             );
         });
         future.exceptionally(exception -> {

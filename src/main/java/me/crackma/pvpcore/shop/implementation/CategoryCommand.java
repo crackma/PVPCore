@@ -148,7 +148,6 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
             return completions;
         }
         ShopManager shopManager = plugin.getShopManager();
-        ShopDatabase shopDatabase = plugin.getShopDatabase();
         switch (args[0].toLowerCase()) {
             //category create <name> <displayItem> <inventorySlot> <description>
             case "create":

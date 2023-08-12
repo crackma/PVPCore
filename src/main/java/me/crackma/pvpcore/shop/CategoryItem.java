@@ -1,20 +1,15 @@
 package me.crackma.pvpcore.shop;
 
-import lombok.Getter;
-import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.user.Stats;
-import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserDatabase;
-import me.crackma.pvpcore.user.UserManager;
-import org.bukkit.entity.HumanEntity;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import lombok.Getter;
 
 public class CategoryItem {
     @Getter

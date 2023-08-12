@@ -3,8 +3,7 @@ package me.crackma.pvpcore.utils;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,11 @@ public class Utils {
         return materialList;
     }
     public String formatToDate(long time) {
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        return formatter.format(time);
+        Duration duration = Duration.ofMillis(time);
+        long days = duration.toDays();
+        long hours = duration.toHours() % 24;
+        long minutes = duration.toMinutes() % 60;
+        long seconds = duration.getSeconds() % 60;
+        return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
     }
 }

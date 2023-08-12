@@ -1,18 +1,18 @@
 package me.crackma.pvpcore.shop.implementation;
 
-import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.gui.Gui;
-import me.crackma.pvpcore.gui.GuiButton;
-import me.crackma.pvpcore.shop.Category;
-import me.crackma.pvpcore.shop.CategoryItem;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
+import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.gui.Gui;
+import me.crackma.pvpcore.gui.GuiButton;
+import me.crackma.pvpcore.shop.CategoryItem;
 
 public class ItemGui extends Gui {
     private PVPCorePlugin plugin;

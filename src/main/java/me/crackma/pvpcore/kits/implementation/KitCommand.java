@@ -1,10 +1,7 @@
 package me.crackma.pvpcore.kits.implementation;
 
 import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.gui.GuiManager;
 import me.crackma.pvpcore.kits.Kit;
-import me.crackma.pvpcore.kits.KitManager;
-import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,7 +35,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 kit = plugin.getKitManager().getKit(args[0]);
                 if (kit == null) return false;
                 plugin.getKitManager().giveKit(player, kit);
-                if (plugin.getUserManager().getUser(player.getUniqueId()).getStats().canClaim(kit)) {
+                if (plugin.getUserManager().get(player.getUniqueId()).getStats().canClaim(kit)) {
                     sender.sendMessage("§eGave §d" + kit.getName() + " §ekit to §d" + player.getName() + "§e.");
                 }
                 return true;

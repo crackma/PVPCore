@@ -4,7 +4,6 @@ import lombok.Getter;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.Stats;
 import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserManager;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +24,7 @@ public class ShopManager {
         categorySet.add(category);
     }
     public void giveCategoryItem(CategoryItem categoryItem, HumanEntity player, int amount) {
-        User user = plugin.getUserManager().getUser(player.getUniqueId());
+        User user = plugin.getUserManager().get(player.getUniqueId());
         if (user.getStats().getGems() < categoryItem.getPrice()) {
             player.sendMessage("§cYou cannot afford that.");
             return;

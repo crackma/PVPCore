@@ -3,7 +3,6 @@ package me.crackma.pvpcore.kits;
 import lombok.Getter;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.User;
-import me.crackma.pvpcore.user.UserManager;
 import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +27,7 @@ public class KitManager {
         kitSet.add(kit);
     }
     public void giveKit(HumanEntity player, Kit kit) {
-        User user = plugin.getUserManager().getUser(player.getUniqueId());
+        User user = plugin.getUserManager().get(player.getUniqueId());
         if (!user.getStats().canClaim(kit)) {
             long currentTime = new Date().getTime();
             long cooldownTime = user.getStats().getKitCooldown(kit);
