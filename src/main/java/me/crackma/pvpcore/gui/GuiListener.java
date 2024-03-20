@@ -9,9 +9,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class GuiListener implements Listener {
-    private PVPCorePlugin plugin;
+	private PVPCorePlugin plugin;
     public GuiListener(PVPCorePlugin plugin) {
-        this.plugin = plugin;
+    	this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler
@@ -20,11 +20,11 @@ public class GuiListener implements Listener {
     }
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        plugin.getGuiManager().onClick(event);
+    	plugin.getGuiManager().onClick(event);
     }
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        plugin.getGuiManager().onClose(event);
+    	plugin.getGuiManager().onClose(event);
     }
 }
 

@@ -6,17 +6,23 @@ import me.crackma.pvpcore.user.User;
 import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class KitManager {
-    private PVPCorePlugin plugin;
+	private PVPCorePlugin plugin;
     @Getter
     private Set<Kit> kitSet = new HashSet<>();
     public KitManager(PVPCorePlugin plugin) {
-        this.plugin = plugin;
+    	this.plugin = plugin;
         plugin.getKitDatabase().fetchKits().thenAccept(kits -> {
             for (Kit kit : kits) {
                 addKit(kit);
@@ -25,6 +31,39 @@ public class KitManager {
     }
     public void addKit(Kit kit) {
         kitSet.add(kit);
+    }
+    public String serialize(ItemStack[] items) {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+
+            dataOutput.writeInt(items.length);
+
+            for (ItemStack item : items) {
+                dataOutput.writeObject(item);
+            }
+
+            dataOutput.close();
+            return Base64Coder.encodeLines(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public ItemStack[] deserialize(String base64) {
+        try {
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(base64));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+            ItemStack[] items = new ItemStack[dataInput.readInt()];
+            for (int i = 0; i < items.length; i++) {
+                items[i] = (ItemStack) dataInput.readObject();
+            }
+            dataInput.close();
+            return items;
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     public void giveKit(HumanEntity player, Kit kit) {
         User user = plugin.getUserManager().get(player.getUniqueId());

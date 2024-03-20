@@ -23,7 +23,7 @@ public class ShopGui extends Gui {
     }
     @Override
     public Inventory createInventory() {
-    	return Bukkit.createInventory(null, PVPCorePlugin.getPlugin().getConfig().getInt("shop_gui_size"));
+    	return Bukkit.createInventory(null, PVPCorePlugin.getInstance().getConfig().getInt("shop_gui_size"));
     }
     @Override
     public void decorate() {
@@ -37,10 +37,10 @@ public class ShopGui extends Gui {
         List<String> meta = new ArrayList<>();
         meta.add(ChatColor.translateAlternateColorCodes('&',"§e" + category.getDescription()));
         itemMeta.setLore(meta);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
         itemStack.setItemMeta(itemMeta);
         this.addButton(category.getInventorySlot(), new GuiButton().
-                creator(unused -> itemStack).
+                creator(itemStack).
                 leftConsumer(event -> plugin.getGuiManager().openGUI(new CategoryGui(plugin, category), event.getWhoClicked())));
         super.decorate();
     }

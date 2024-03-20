@@ -46,10 +46,10 @@ public class ItemGui extends Gui {
         int newPrice = categoryItem.getPrice() * amount;
         meta.add(newPrice == 1 ? "§ePrice: §d" + newPrice + " gem§e." : "§ePrice: §d" + newPrice + " gems§e.");
         itemMeta.setLore(meta);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
         itemStack.setItemMeta(itemMeta);
         this.addButton(inventorySlot, new GuiButton().
-                creator(unused -> itemStack).
+                creator(itemStack).
                 leftConsumer(event -> {
                     plugin.getShopManager().giveCategoryItem(categoryItem, event.getWhoClicked(), amount);
                 }));

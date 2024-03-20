@@ -1,22 +1,21 @@
 package me.crackma.pvpcore.gui;
 
-import lombok.Getter;
-import org.bukkit.entity.Player;
+import java.util.function.Consumer;
+
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
+import lombok.Getter;
 
 public class GuiButton {
     @Getter
-    private Function<Player, ItemStack> itemStackCreator;
+    private ItemStack itemStack;
     @Getter
     private Consumer<InventoryClickEvent> leftEventConsumer;
     @Getter
     private Consumer<InventoryClickEvent> rightEventConsumer;
-    public GuiButton creator(Function<Player, ItemStack> itemStackCreator) {
-        this.itemStackCreator = itemStackCreator;
+    public GuiButton creator(ItemStack itemStack) {
+        this.itemStack = itemStack;
         return this;
     }
     public GuiButton leftConsumer(Consumer<InventoryClickEvent> eventConsumer) {

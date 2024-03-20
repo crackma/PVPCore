@@ -11,7 +11,6 @@ public class KitGui extends Gui {
     private final Kit kit;
     public KitGui(Kit kit) {
         this.kit = kit;
-        this.createInventory();
     }
     @Override
     public Inventory createInventory() {
@@ -22,7 +21,7 @@ public class KitGui extends Gui {
         int slot = 0;
         for (ItemStack itemStack : kit.getItems()) {
             addButton(slot, new GuiButton().
-                    creator(unused -> itemStack));
+                    creator(itemStack));
             slot++;
         }
         super.decorate();

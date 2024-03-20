@@ -1,12 +1,16 @@
 package me.crackma.pvpcore.gui;
 
-import lombok.Getter;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+
+import lombok.Getter;
 
 public abstract class Gui {
     @Getter
@@ -21,10 +25,7 @@ public abstract class Gui {
         this.buttonMap.put(slot, button);
     }
     public void decorate() {
-        this.buttonMap.forEach((slot, button) -> {
-            ItemStack itemStack = button.getItemStackCreator().apply(null);
-            this.inventory.setItem(slot, itemStack);
-        });
+        this.buttonMap.forEach((slot, button) -> this.inventory.setItem(slot, button.getItemStack()));
     }
     public void onOpen(InventoryOpenEvent event) {
         decorate();

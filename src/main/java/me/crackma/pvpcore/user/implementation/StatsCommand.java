@@ -2,6 +2,7 @@ package me.crackma.pvpcore.user.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -41,12 +42,12 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(statsMessage(stats));
             return true;
         }
-        plugin.getUserDatabase().exists(uuid).thenAccept(bool -> {
-            if (!bool) {
+        plugin.getUserDatabase().get(uuid).thenAccept(stats -> {
+            if (stats == null) {
                 sender.sendMessage("§cEnter a valid user.");
                 return;
             }
-            plugin.getUserDatabase().get(uuid).thenAccept(stats -> sender.sendMessage(statsMessage(stats)));
+            sender.sendMessage(statsMessage(stats));
         });
         return true;
     }
@@ -55,7 +56,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (User user : plugin.getUserManager().getUsers()) completions.add(user.getPlayer().getName());
+                for (Map.Entry<UUID, User> entry : plugin.getUserManager().getUserMap().entrySet()) completions.add(entry.getValue().getOfflinePlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");

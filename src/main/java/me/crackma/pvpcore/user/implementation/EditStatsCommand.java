@@ -2,6 +2,8 @@ package me.crackma.pvpcore.user.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -34,6 +36,7 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
             stats.setStreak(Integer.parseInt(args[3]));
             stats.setGems(Integer.parseInt(args[4]));
             plugin.getUserDatabase().updateOne(user);
+            plugin.getUserManager().updateBoard(user);
             sender.sendMessage("updated stats of " + player.getName() + " to " + stats);
         } catch (NumberFormatException e) {
             return false;
@@ -45,7 +48,7 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         switch (args.length) {
             case 1:
-                for (User user : plugin.getUserManager().getUsers()) completions.add(user.getPlayer().getName());
+                for (Map.Entry<UUID, User> entry : plugin.getUserManager().getUserMap().entrySet()) completions.add(entry.getValue().getOfflinePlayer().getName());
                 break;
             case 2:
                 completions.add("<kills>");

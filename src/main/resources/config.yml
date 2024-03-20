@@ -1,7 +1,6 @@
-# size of the kit gui (must be rows * 9)
-kit_gui_size: 27
-# size of the shop gui (must be rows * 9)
-shop_gui_size: 27
+# row count in guis
+kit_gui_rows: 3
+shop_gui_rows: 3
 # combat timer (seconds)
 combat_timer: 20
 # placeholders: %kills%, %deaths%, %streak%, %gems%, %timer%

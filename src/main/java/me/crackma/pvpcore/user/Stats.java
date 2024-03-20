@@ -17,7 +17,7 @@ public class Stats {
     @Setter
     private int combatTimer = 0;
     @Getter
-    public static int configCombatTimer = PVPCorePlugin.getPlugin().getConfig().getInt("combat_timer");
+    public static int configCombatTimer = PVPCorePlugin.getInstance().getConfig().getInt("combat_timer");
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
     private Map<String, Long> cooldownMap = new HashMap<>();

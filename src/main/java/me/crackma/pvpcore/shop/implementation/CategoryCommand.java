@@ -83,6 +83,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                         sender.sendMessage("§eUpdated §d" + args[1] + "'s§e description.");
                         break;
                 }
+                shopDatabase.insertCategory(category);
                 return true;
             //category addItem <categoryName> <itemName> <inventorySlot> <price> (hold an item)
             case "additem":

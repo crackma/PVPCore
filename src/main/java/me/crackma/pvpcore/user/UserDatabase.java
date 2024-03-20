@@ -1,20 +1,25 @@
 package me.crackma.pvpcore.user;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import me.crackma.pvpcore.PVPCorePlugin;
-import org.bson.Document;
+import static com.mongodb.client.model.Filters.eq;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import static com.mongodb.client.model.Filters.eq;
+import org.bson.Document;
+
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import me.crackma.pvpcore.PVPCorePlugin;
 
 public class UserDatabase {
     private MongoCollection<Document> collection;
     public UserDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
-        MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
-        this.collection = collection;
+        collection = mongoDatabase.getCollection(plugin.getConfig().getString("user_collection"));
     }
     public User getOrCreate(UUID uuid) {
         if (collection.find(eq("_id", uuid.toString())).first() == null) {
@@ -38,14 +43,6 @@ public class UserDatabase {
                 document.getString("kitCooldowns"))
         );
     }
-    public CompletableFuture<Boolean> exists(UUID uuid) {
-        CompletableFuture<Boolean> future = CompletableFuture.supplyAsync(() -> collection.find(eq("_id", uuid.toString())).first() != null);
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
-    }
     public CompletableFuture<Stats> get(UUID uuid) {
         CompletableFuture<Stats> future = CompletableFuture.supplyAsync(() -> {
             Document document = collection.find(eq("_id", uuid.toString())).first();
@@ -57,6 +54,22 @@ public class UserDatabase {
                     document.getInteger("gems"),
                     document.getString("kitCooldowns")
             );
+        });
+        future.exceptionally(exception -> {
+            exception.printStackTrace();
+            return null;
+        });
+        return future;
+    }
+    public CompletableFuture<Set<Document>> getAllDocuments() {
+        CompletableFuture<Set<Document>> future = CompletableFuture.supplyAsync(() -> {
+        	Set<Document> documents = new HashSet<>();
+            FindIterable<Document> iterable = collection.find();
+            Iterator iterator = iterable.iterator();
+            while (iterator.hasNext()) {
+               documents.add((Document)iterator.next());
+            }
+            return documents;
         });
         future.exceptionally(exception -> {
             exception.printStackTrace();

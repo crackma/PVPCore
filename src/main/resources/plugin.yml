@@ -18,7 +18,11 @@ commands:
     permission-message: §cYou cannot do that.
   kit:
     description: Claim kits.
-    usage: §c/kit <kit_name> [player]
+    aliases: kits
+    usage: §c/<command> <kit_name> [player]
+  leaderboard:
+    description: View the top players.
+    aliases: lb
   category:
     description: Edit the categories of the shop
     usage: §c/category help

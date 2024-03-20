@@ -1,23 +1,24 @@
 package me.crackma.pvpcore.shop;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import me.crackma.pvpcore.PVPCorePlugin;
-import org.bson.Document;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import org.bson.Document;
+
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+
+import me.crackma.pvpcore.PVPCorePlugin;
+
 public class ShopDatabase {
-    private PVPCorePlugin plugin;
+	private PVPCorePlugin plugin;
     private MongoCollection<Document> collection;
     public ShopDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
-        this.plugin = plugin;
-        MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("shop_collection"));
-        this.collection = collection;
+    	this.plugin = plugin;
+        collection = mongoDatabase.getCollection(plugin.getConfig().getString("shop_collection"));
     }
     public CompletableFuture<Void> insertCategory(Category category) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
@@ -75,3 +76,4 @@ public class ShopDatabase {
         return future;
     }
 }
+

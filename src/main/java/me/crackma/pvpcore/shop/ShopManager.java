@@ -11,11 +11,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ShopManager {
+	@Getter
     private PVPCorePlugin plugin;
     @Getter
     private Set<Category> categorySet = new HashSet<>();
     public ShopManager(PVPCorePlugin plugin) {
-        this.plugin = plugin;
+    	this.plugin = plugin;
         plugin.getShopDatabase().fetchCategories().thenAccept(categories -> {
             categorySet = categories;
         });
@@ -32,6 +33,7 @@ public class ShopManager {
         Stats stats = user.getStats();
         int price = categoryItem.getPrice() * amount;
         stats.setGems(stats.getGems() - price);
+        plugin.getUserManager().updateBoard(user);
         plugin.getUserDatabase().updateOne(user);
         String gemOrGems = price == 1 ? "gem" : "gems";
         player.sendMessage("§eYou bought §d" + amount + "§e of §d" + categoryItem.getName() + " §efor §d" + price + " " + gemOrGems + "§e.");

@@ -6,18 +6,18 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import me.crackma.pvpcore.PVPCorePlugin;
 import org.bson.Document;
+import org.bukkit.Material;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class KitDatabase {
-    private MongoCollection<Document> collection;
-    private PVPCorePlugin plugin;
+	private PVPCorePlugin plugin;
+    private static MongoCollection<Document> collection;
     public KitDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
-        this.plugin = plugin;
-        MongoCollection<Document> collection = mongoDatabase.getCollection(plugin.getConfig().getString("kit_collection"));
-        this.collection = collection;
+    	this.plugin = plugin;
+        collection = mongoDatabase.getCollection(plugin.getConfig().getString("kit_collection"));
     }
     public CompletableFuture<Void> insertKit(Kit kit) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
@@ -26,7 +26,7 @@ public class KitDatabase {
             document.put("cooldown", kit.getCooldown());
             document.put("inventorySlot", kit.getInventorySlot());
             document.put("displayItem", kit.getDisplayItem());
-            document.put("items", kit.getItemsAsBase64());
+            document.put("items", plugin.getKitManager().serialize(kit.getItems()));
             collection.insertOne(document);
             return null;
         });
@@ -45,9 +45,8 @@ public class KitDatabase {
                         document.getString("_id"),
                         document.getInteger("cooldown"),
                         document.getInteger("inventorySlot"),
-                        document.getString("displayItem"),
-                        document.getString("items"),
-                        plugin
+                        Material.valueOf(document.getString("displayItem")),
+                        plugin.getKitManager().deserialize(document.getString("items"))
                 );
                 categorySet.add(kit);
             });

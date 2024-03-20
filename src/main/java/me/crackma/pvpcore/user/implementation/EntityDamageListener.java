@@ -1,8 +1,7 @@
 package me.crackma.pvpcore.user.implementation;
 
-import me.crackma.pvpcore.PVPCorePlugin;
-import me.crackma.pvpcore.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -11,44 +10,49 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import me.crackma.pvpcore.PVPCorePlugin;
+import me.crackma.pvpcore.user.User;
+import me.crackma.pvpcore.user.UserManager;
+
 public class EntityDamageListener implements Listener {
     private PVPCorePlugin plugin;
     public EntityDamageListener(PVPCorePlugin plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageEvent event) {
         if (event.isCancelled()) return;
         if (!(event.getEntity() instanceof Player)) return;
         Player victim = (Player) event.getEntity();
-        User victimUser = plugin.getUserManager().get(victim.getUniqueId());
+        UserManager userManager = plugin.getUserManager();
+        User victimUser = userManager.get(victim.getUniqueId());
         if (victimUser == null) return;
-        victimUser.restartCombatTimer();
+        if (victim.getHealth() - event.getFinalDamage() > 0) plugin.getUserManager().restartCombatTimer(victimUser);
         Player attacker;
         User attackerUser;
         //make last attacker
         if (event instanceof EntityDamageByEntityEvent) {
-            EntityDamageByEntityEvent newEvent = (EntityDamageByEntityEvent) event;
-            if (newEvent.getDamager() instanceof Projectile) {
-                Projectile projectile = (Projectile) newEvent.getDamager();
+            Entity damager = ((EntityDamageByEntityEvent) event).getDamager();
+            if (damager instanceof Projectile) {
+                Projectile projectile = (Projectile) damager;
                 if (!(projectile.getShooter() instanceof Player)) return;
                 attacker = (Player) projectile.getShooter();
-                attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
-                attackerUser.restartCombatTimer();
+                attackerUser = userManager.get(attacker.getUniqueId());
+                userManager.restartCombatTimer(attackerUser);
                 victimUser.setLastAttacker(attackerUser);
                 victimUser.addAttacker(attackerUser);
             }
-            if (newEvent.getDamager() instanceof Player) {
-                attacker = (Player) newEvent.getDamager();
-                attackerUser = plugin.getUserManager().get(attacker.getUniqueId());
-                attackerUser.restartCombatTimer();
+            if (damager instanceof Player) {
+                attacker = (Player) damager;
+                attackerUser = userManager.get(attacker.getUniqueId());
+                userManager.restartCombatTimer(attackerUser);
                 victimUser.setLastAttacker(attackerUser);
                 victimUser.addAttacker(attackerUser);
             }
         }
-        if (victim.getHealth() - event.getFinalDamage() > 0) return;
+        if (victim.getHealth() - event.getFinalDamage() >= 0) return;
         event.setCancelled(true);
-        victimUser.kill();
+        userManager.kill(victimUser);
     }
 }
