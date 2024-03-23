@@ -3,13 +3,13 @@ kit_gui_rows: 3
 shop_gui_rows: 3
 # combat timer (seconds)
 combat_timer: 20
-# placeholders: %kills%, %deaths%, %streak%, %gems%, %timer%
+# placeholders: %kills%, %deaths%, %streak%, %beststreak%, %gems%, %timer%
 scoreboard:
    title: "&e&lKit&d&lPVP"
    lines:
       - "&7| &eKills: &d&l%kills%"
       - "&7| &eDeaths: &d&l%deaths%"
-      - "&7| &eStreak: &d&l%streak%"
+      - "&7| &eStreak: &d&l%streak% §8(%beststreak%)"
       - "&7| &eGems: &d&l%gems%"
       - "&7| &eCombat: &d&l%timer%s"
 # commands that are blocked if a player is in combat
@@ -17,9 +17,21 @@ blocked_commands:
   - "/spawn"
   - "/kit"
   - "/shop"
+leaderboardrankincorrespondancetotheinventoryslot:
+  "1": 4
+  "2": 10
+  "3": 12
+  "4": 14
+  "5": 16
+  "6": 18
+  "7": 20
+  "8": 22
+  "9": 24
+  "10": 26
 # mongodb
-connection_uri: replace
-database: replace
-kit_collection: replace
-shop_collection: replace
-user_collection: replace
+mongodb:
+  connection_uri: replace
+  database: replace
+  kit_collection: replace
+  shop_collection: replace
+  user_collection: replace

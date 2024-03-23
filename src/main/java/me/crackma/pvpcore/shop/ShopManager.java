@@ -26,12 +26,12 @@ public class ShopManager {
     }
     public void giveCategoryItem(CategoryItem categoryItem, HumanEntity player, int amount) {
         User user = plugin.getUserManager().get(player.getUniqueId());
-        if (user.getStats().getGems() < categoryItem.getPrice()) {
+        int price = categoryItem.getPrice() * amount;
+        Stats stats = user.getStats();
+        if (stats.getGems() < price) {
             player.sendMessage("§cYou cannot afford that.");
             return;
         }
-        Stats stats = user.getStats();
-        int price = categoryItem.getPrice() * amount;
         stats.setGems(stats.getGems() - price);
         plugin.getUserManager().updateBoard(user);
         plugin.getUserDatabase().updateOne(user);

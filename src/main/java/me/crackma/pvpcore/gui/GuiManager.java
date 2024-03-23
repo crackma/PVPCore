@@ -10,29 +10,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GuiManager {
-    private Map<Inventory, Gui> guiMap = new HashMap<>();
-    public void openGUI(Gui gui, HumanEntity player) {
-        Inventory inventory = gui.getInventory();
-        addGui(inventory, gui);
-        player.openInventory(inventory);
-    }
-    public void addGui(Inventory inventory, Gui guiInterface) {
-        guiMap.put(inventory, guiInterface);
-    }
-    public void onOpen(InventoryOpenEvent event) {
-        Inventory inventory = event.getInventory();
-        if (!guiMap.containsKey(inventory)) return;
-        guiMap.get(inventory).onOpen(event);
-    }
-    public void onClick(InventoryClickEvent event) {
-        Inventory inventory = event.getInventory();
-        if (!guiMap.containsKey(inventory)) return;
-        guiMap.get(inventory).onClick(event);
-    }
-    public void onClose(InventoryCloseEvent event) {
-        Inventory inventory = event.getInventory();
-        if (!guiMap.containsKey(inventory)) return;
-        guiMap.get(inventory).onClose(event);
-        guiMap.remove(inventory);
-    }
+  private Map<Inventory, Gui> guiMap = new HashMap<>();
+  public void openGUI(Gui gui, HumanEntity player) {
+    Inventory inventory = gui.getInventory();
+    addGui(inventory, gui);
+    player.openInventory(inventory);
+  }
+  public void addGui(Inventory inventory, Gui guiInterface) {
+    guiMap.put(inventory, guiInterface);
+  }
+  public void onOpen(InventoryOpenEvent event) {
+    Inventory inventory = event.getInventory();
+    if (!guiMap.containsKey(inventory)) return;
+    guiMap.get(inventory).onOpen(event);
+  }
+  public void onClick(InventoryClickEvent event) {
+    Inventory inventory = event.getInventory();
+    if (!guiMap.containsKey(inventory)) return;
+    guiMap.get(inventory).onClick(event);
+  }
+  public void onClose(InventoryCloseEvent event) {
+    Inventory inventory = event.getInventory();
+    if (!guiMap.containsKey(inventory)) return;
+    guiMap.get(inventory).onClose(event);
+    guiMap.remove(inventory);
+  }
 }

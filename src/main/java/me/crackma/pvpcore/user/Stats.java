@@ -12,7 +12,7 @@ import java.util.Map;
 public class Stats {
     @Getter
     @Setter
-    private int kills, deaths, streak, gems;
+    private int kills, deaths, streak, bestStreak, gems;
     @Getter
     @Setter
     private int combatTimer = 0;
@@ -21,10 +21,11 @@ public class Stats {
     @Getter
     //kitName, cooldown (currentTime + kitCooldown)
     private Map<String, Long> cooldownMap = new HashMap<>();
-    public Stats(int kills, int deaths, int streak, int gems, String cooldowns) {
+    public Stats(int kills, int deaths, int streak, int bestStreak, int gems, String cooldowns) {
         this.kills = kills;
         this.deaths = deaths;
         this.streak = streak;
+        this.bestStreak = bestStreak;
         this.gems = gems;
         if (cooldowns == null) return;
         if (cooldowns.isBlank()) return;
@@ -34,10 +35,11 @@ public class Stats {
             cooldownMap.put(splitCooldown[0], Long.valueOf(splitCooldown[1]));
         }
     }
-    public Stats(int kills, int deaths, int streak, int gems, Map<String, Long> cooldownMap) {
+    public Stats(int kills, int deaths, int streak, int bestStreak, int gems, Map<String, Long> cooldownMap) {
         this.kills = kills;
         this.deaths = deaths;
         this.streak = streak;
+        this.bestStreak = bestStreak;
         this.gems = gems;
         if (cooldownMap == null) return;
         this.cooldownMap = cooldownMap;
@@ -64,6 +66,6 @@ public class Stats {
         return stringBuilder.toString();
     }
     public String toString() {
-        return kills + ", " + deaths + ", " + streak + ", " + gems + ", " + combatTimer;
+        return kills + ", " + deaths + ", " + streak + ", " + bestStreak + ", " + gems + ", " + combatTimer;
     }
 }

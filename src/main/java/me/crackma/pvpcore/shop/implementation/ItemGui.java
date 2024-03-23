@@ -1,25 +1,19 @@
 package me.crackma.pvpcore.shop.implementation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.gui.Gui;
 import me.crackma.pvpcore.gui.GuiButton;
 import me.crackma.pvpcore.shop.CategoryItem;
+import me.crackma.pvpcore.shop.ShopManager;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 
 public class ItemGui extends Gui {
-    private PVPCorePlugin plugin;
+    private ShopManager shopManager;
     private final CategoryItem categoryItem;
     public ItemGui(PVPCorePlugin plugin, CategoryItem categoryItem) {
         super();
-        this.plugin = plugin;
+        this.shopManager = plugin.getShopManager();
         this.categoryItem = categoryItem;
     }
     @Override
@@ -28,31 +22,19 @@ public class ItemGui extends Gui {
     }
     @Override
     public void decorate() {
-        addItem(10, 1);
-        addItem(11, 2);
-        addItem(12, 4);
-        addItem(13, 8);
-        addItem(14, 16);
-        addItem(15, 32);
-        addItem(16, 64);
-        super.decorate();
-    }
-    private void addItem(int inventorySlot, int amount) {
-        ItemStack itemStack = new ItemStack(categoryItem.getItemStack().getType());
-        itemStack.setAmount(amount);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName("§d" + categoryItem.getName());
-        List<String> meta = new ArrayList<>();
-        int newPrice = categoryItem.getPrice() * amount;
-        meta.add(newPrice == 1 ? "§ePrice: §d" + newPrice + " gem§e." : "§ePrice: §d" + newPrice + " gems§e.");
-        itemMeta.setLore(meta);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_POTION_EFFECTS);
-        itemStack.setItemMeta(itemMeta);
-        this.addButton(inventorySlot, new GuiButton().
-                creator(itemStack).
+        int slot = 10;
+        int amount = 1;
+        while (amount < 64) {
+            int finalAmount = amount;
+            putButton(slot, new GuiButton().
+                creator(categoryItem.prepareForShop(amount)).
                 leftConsumer(event -> {
-                    plugin.getShopManager().giveCategoryItem(categoryItem, event.getWhoClicked(), amount);
+                   shopManager.giveCategoryItem(categoryItem, event.getWhoClicked(), finalAmount);
                 }));
+            slot++;
+            amount = amount * 2;
+        }
         super.decorate();
     }
+
 }

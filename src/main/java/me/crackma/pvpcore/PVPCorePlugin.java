@@ -3,6 +3,7 @@ package me.crackma.pvpcore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import me.crackma.pvpcore.user.implementation.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,10 +29,6 @@ import me.crackma.pvpcore.shop.implementation.CategoryCommand;
 import me.crackma.pvpcore.shop.implementation.ShopCommand;
 import me.crackma.pvpcore.user.UserDatabase;
 import me.crackma.pvpcore.user.UserManager;
-import me.crackma.pvpcore.user.implementation.CommandListener;
-import me.crackma.pvpcore.user.implementation.EditStatsCommand;
-import me.crackma.pvpcore.user.implementation.EntityDamageListener;
-import me.crackma.pvpcore.user.implementation.UserListener;
 import org.bukkit.scoreboard.Team;
 
 @Getter
@@ -53,7 +50,7 @@ public final class PVPCorePlugin extends JavaPlugin {
         getDataFolder().mkdirs();
         this.saveDefaultConfig();
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
-        MongoDatabase mongoDatabase = MongoClients.create(getConfig().getString("connection_uri")).getDatabase(getConfig().getString("database"));
+        MongoDatabase mongoDatabase = MongoClients.create(getConfig().getString("mongodb.connection_uri")).getDatabase(getConfig().getString("mongodb.database"));
         userDatabase = new UserDatabase(this, mongoDatabase);
         kitDatabase = new KitDatabase(this, mongoDatabase);
         shopDatabase = new ShopDatabase(this, mongoDatabase);
@@ -74,6 +71,8 @@ public final class PVPCorePlugin extends JavaPlugin {
         new ShopCommand(this);
         new CommandListener(this);
         new EditStatsCommand(this);
+        new ExitCombatCommand(this);
+        new StatsCommand(this);
         new EntityDamageListener(this);
         new UserListener(this);
     }

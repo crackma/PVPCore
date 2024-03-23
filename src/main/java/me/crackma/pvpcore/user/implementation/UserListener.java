@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import fr.mrmicky.fastboard.FastBoard;
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.user.User;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -50,5 +51,11 @@ public class UserListener implements Listener {
         if (!user.getStats().isInCombat()) return;
         plugin.getUserManager().kill(user);
         Bukkit.broadcastMessage("§c" + player.getName() + " has logged out while in combat.");
+    }
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event) {
+      Player player = event.getPlayer();
+      player.setFallDistance(0);
+      player.setFireTicks(0);
     }
 }

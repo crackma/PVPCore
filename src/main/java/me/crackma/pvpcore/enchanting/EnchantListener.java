@@ -15,9 +15,9 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import java.util.Map;
 
 public class EnchantListener implements Listener {
-	private PVPCorePlugin plugin;
+    private PVPCorePlugin plugin;
     public EnchantListener(PVPCorePlugin plugin) {
-    	this.plugin = plugin;
+        this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
     @EventHandler

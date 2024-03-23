@@ -18,7 +18,7 @@ public class ShopDatabase {
     private MongoCollection<Document> collection;
     public ShopDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
     	this.plugin = plugin;
-        collection = mongoDatabase.getCollection(plugin.getConfig().getString("shop_collection"));
+        collection = mongoDatabase.getCollection(plugin.getConfig().getString("mongodb.shop_collection"));
     }
     public CompletableFuture<Void> insertCategory(Category category) {
         CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {

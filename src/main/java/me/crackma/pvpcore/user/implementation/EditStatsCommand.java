@@ -34,7 +34,8 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
             stats.setKills(Integer.parseInt(args[1]));
             stats.setDeaths(Integer.parseInt(args[2]));
             stats.setStreak(Integer.parseInt(args[3]));
-            stats.setGems(Integer.parseInt(args[4]));
+            stats.setBestStreak(Integer.parseInt(args[4]));
+            stats.setGems(Integer.parseInt(args[5]));
             plugin.getUserDatabase().updateOne(user);
             plugin.getUserManager().updateBoard(user);
             sender.sendMessage("updated stats of " + player.getName() + " to " + stats);
@@ -60,6 +61,9 @@ public class EditStatsCommand implements CommandExecutor, TabCompleter {
                 completions.add("<streak>");
                 break;
             case 5:
+                completions.add("<bestStreak>");
+                break;
+            case 6:
                 completions.add("<gems>");
         }
         return completions;

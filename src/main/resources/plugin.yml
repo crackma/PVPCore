@@ -22,7 +22,7 @@ commands:
     usage: §c/<command> <kit_name> [player]
   leaderboard:
     description: View the top players.
-    aliases: lb
+    aliases: [lb, top]
   category:
     description: Edit the categories of the shop
     usage: §c/category help
@@ -31,6 +31,10 @@ commands:
   shop:
     description: Buy items.
     usage: §c/shop
+  exitcombat:
+    description: Sets the combat timer to 0.
+    permission: pvpcore.exitcombat
+    permission-message: §cYou cannot do that.
   stats:
     description: View players' stats.
     usage: §c/stats [player]

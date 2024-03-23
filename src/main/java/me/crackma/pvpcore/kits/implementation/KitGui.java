@@ -8,22 +8,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public class KitGui extends Gui {
-    private final Kit kit;
-    public KitGui(Kit kit) {
-        this.kit = kit;
+  private final Kit kit;
+  public KitGui(Kit kit) {
+    this.kit = kit;
+  }
+  @Override
+  public Inventory createInventory() {
+    return Bukkit.createInventory(null, 27);
+  }
+  @Override
+  public void decorate() {
+    int slot = 0;
+    for (ItemStack itemStack : kit.getItems()) {
+      putButton(slot, new GuiButton().
+          creator(itemStack));
+      slot++;
     }
-    @Override
-    public Inventory createInventory() {
-        return Bukkit.createInventory(null, 27);
-    }
-    @Override
-    public void decorate() {
-        int slot = 0;
-        for (ItemStack itemStack : kit.getItems()) {
-            addButton(slot, new GuiButton().
-                    creator(itemStack));
-            slot++;
-        }
-        super.decorate();
-    }
+    super.decorate();
+  }
 }

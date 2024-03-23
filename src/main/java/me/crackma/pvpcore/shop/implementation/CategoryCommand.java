@@ -7,10 +7,7 @@ import me.crackma.pvpcore.shop.ShopDatabase;
 import me.crackma.pvpcore.shop.ShopManager;
 import me.crackma.pvpcore.utils.Utils;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,8 +18,9 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
     private PVPCorePlugin plugin;
     public CategoryCommand(PVPCorePlugin plugin) {
         this.plugin = plugin;
-        plugin.getCommand("category").setExecutor(this);
-        plugin.getCommand("category").setTabCompleter(this);
+        PluginCommand pluginCommand = plugin.getCommand("category");
+        pluginCommand.setExecutor(this);
+        pluginCommand.setTabCompleter(this);
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -95,8 +93,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
                 if (itemStack == null) return false;
                 try {
-                    //have to create a different instance of ItemStack
-                    category.addItem(new CategoryItem(args[2], new ItemStack(itemStack), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
+                    category.addItem(new CategoryItem(args[2], itemStack.clone(), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
                 } catch (NumberFormatException exception) {
                     return false;
                 }
