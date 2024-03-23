@@ -33,10 +33,10 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
             case "help":
                 sender.sendMessage("§c/category create [<name>] [<displayItem>] [<inventorySlot>] [<description>]§f\n" +
-                                      "§c/category edit [<name>] displayItem/inventorySlot/description [<new>]§f\n" +
-                                      "§c/category addItem [<categoryName>] [<itemName>] [<inventorySlot>] [<price>] (hold an item)§f\n" +
-                                      "§c/category removeItem [<categoryName>] [<itemName>]§f\n" +
-                                      "§c/category remove [<name>]\n");
+                                   "§c/category edit [<name>] displayItem/inventorySlot/description [<new>]§f\n" +
+                                   "§c/category addItem [<categoryName>] [<itemName>] [<inventorySlot>] [<price>] (hold an item)§f\n" +
+                                   "§c/category removeItem [<categoryName>] [<itemName>]§f\n" +
+                                   "§c/category remove [<name>]\n");
                 return true;
             //category create <name> <displayItem> <inventorySlot> <description>
             case "create":
@@ -91,7 +91,7 @@ public class CategoryCommand implements CommandExecutor, TabCompleter {
                 if (category == null) return false;
                 Player player = (Player) sender;
                 ItemStack itemStack = player.getInventory().getItemInMainHand();
-                if (itemStack == null) return false;
+                if (itemStack.getType() == Material.AIR) return false;
                 try {
                     category.addItem(new CategoryItem(args[2], itemStack.clone(), Integer.parseInt(args[3]), Integer.parseInt(args[4])));
                 } catch (NumberFormatException exception) {

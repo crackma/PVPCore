@@ -1,6 +1,5 @@
 package me.crackma.pvpcore.leaderboard;
 
-import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.gui.Gui;
 import me.crackma.pvpcore.gui.GuiButton;
 import me.crackma.pvpcore.gui.GuiManager;

@@ -28,9 +28,7 @@ public class ItemGui extends Gui {
             int finalAmount = amount;
             putButton(slot, new GuiButton().
                 creator(categoryItem.prepareForShop(amount)).
-                leftConsumer(event -> {
-                   shopManager.giveCategoryItem(categoryItem, event.getWhoClicked(), finalAmount);
-                }));
+                leftConsumer(event -> shopManager.giveCategoryItem(categoryItem, event.getWhoClicked(), finalAmount)));
             slot++;
             amount = amount * 2;
         }

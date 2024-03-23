@@ -8,20 +8,15 @@ import org.bukkit.Material;
 
 import lombok.Getter;
 import lombok.Setter;
-
+@Getter
 public class Category {
-    @Getter
     private final String name;
-    @Getter
     @Setter
     private String description;
-    @Getter
     @Setter
     private Material displayItem;
-    @Getter
     @Setter
     private int inventorySlot;
-    @Getter
     private Set<CategoryItem> items = new HashSet<>();
     public Category(String name, String description, Material displayItem, int inventorySlot) {
         this.name = name;
@@ -53,7 +48,10 @@ public class Category {
         for (Iterator<CategoryItem> iterator = items.iterator(); iterator.hasNext();) {
             CategoryItem categoryItem = iterator.next();
             String categoryItemName = categoryItem.getName().toLowerCase();
-            if (categoryItemName.equals(name)) items.remove(categoryItem);
+            if (categoryItemName.equals(name)) {
+                items.remove(categoryItem);
+                return;
+            }
         }
     }
 }

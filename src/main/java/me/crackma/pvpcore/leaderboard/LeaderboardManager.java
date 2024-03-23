@@ -15,8 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static com.mongodb.client.model.Filters.eq;
-
 public class LeaderboardManager {
   private PVPCorePlugin plugin;
   @Getter

@@ -7,12 +7,10 @@ import org.bukkit.inventory.ItemStack;
 
 import lombok.Getter;
 
+@Getter
 public class GuiButton {
-  @Getter
   private ItemStack itemStack;
-  @Getter
   private Consumer<InventoryClickEvent> leftEventConsumer;
-  @Getter
   private Consumer<InventoryClickEvent> rightEventConsumer;
   public GuiButton creator(ItemStack itemStack) {
     this.itemStack = itemStack;

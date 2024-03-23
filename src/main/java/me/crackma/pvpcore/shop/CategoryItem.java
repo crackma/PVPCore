@@ -14,13 +14,10 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import lombok.Getter;
-
+@Getter
 public class CategoryItem {
-    @Getter
     private String name;
-    @Getter
     private ItemStack itemStack;
-    @Getter
     private int inventorySlot, price;
     public CategoryItem(String name, ItemStack itemStack, int inventorySlot, int price) {
         this.name = name;

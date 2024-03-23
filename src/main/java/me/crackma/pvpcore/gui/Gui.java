@@ -12,10 +12,9 @@ import org.bukkit.inventory.Inventory;
 
 import lombok.Getter;
 
+@Getter
 public abstract class Gui {
-  @Getter
   private final Inventory inventory;
-  @Getter
   private final Map<Integer, GuiButton> buttonMap = new HashMap<>();
   public Gui() {
     this.inventory = createInventory();

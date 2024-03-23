@@ -14,66 +14,66 @@ import com.mongodb.client.model.Filters;
 import me.crackma.pvpcore.PVPCorePlugin;
 
 public class ShopDatabase {
-	private PVPCorePlugin plugin;
-    private MongoCollection<Document> collection;
-    public ShopDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
-    	this.plugin = plugin;
-        collection = mongoDatabase.getCollection(plugin.getConfig().getString("mongodb.shop_collection"));
-    }
-    public CompletableFuture<Void> insertCategory(Category category) {
-        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            Document document = new Document();
-            document.put("_id", category.getName());
-            document.put("description", category.getDescription());
-            document.put("displayItem", category.getDisplayItem().toString());
-            document.put("inventorySlot", category.getInventorySlot());
-            document.put("items", category.getItemsAsString());
-            if (plugin.getShopManager().exists(category)) {
-                collection.replaceOne(Filters.eq(category.getName()), document);
-            } else {
-                collection.insertOne(document);
-            }
-            plugin.getShopManager().addCategory(category);
-            return null;
-        });
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
-    }
-    public CompletableFuture<Void> deleteCategory(String categoryName) {
-        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
-            collection.deleteOne(Filters.eq("_id", categoryName));
-            return null;
-        });
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
-    }
-    protected CompletableFuture<Set<Category>> fetchCategories() {
-        CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
-            FindIterable<Document> documents = collection.find();
-            Set<Category> categorySet = new HashSet<>();
-            documents.forEach(document -> {
-                Category category = new Category(
-                document.getString("_id"),
-                document.getString("description"),
-                document.getString("displayItem"),
-                document.getInteger("inventorySlot"),
-                document.getString("items")
-                );
-                categorySet.add(category);
-            });
-            return categorySet;
-        });
-        future.exceptionally(exception -> {
-            exception.printStackTrace();
-            return null;
-        });
-        return future;
-    }
+  private PVPCorePlugin plugin;
+  private MongoCollection<Document> collection;
+  public ShopDatabase(PVPCorePlugin plugin, MongoDatabase mongoDatabase) {
+    this.plugin = plugin;
+    collection = mongoDatabase.getCollection(plugin.getConfig().getString("mongodb.shop_collection"));
+  }
+  public CompletableFuture<Void> insertCategory(Category category) {
+    CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+      Document document = new Document();
+      document.put("_id", category.getName());
+      document.put("description", category.getDescription());
+      document.put("displayItem", category.getDisplayItem().toString());
+      document.put("inventorySlot", category.getInventorySlot());
+      document.put("items", category.getItemsAsString());
+      if (plugin.getShopManager().exists(category)) {
+        collection.replaceOne(Filters.eq(category.getName()), document);
+      } else {
+        collection.insertOne(document);
+      }
+      plugin.getShopManager().addCategory(category);
+      return null;
+    });
+    future.exceptionally(exception -> {
+      exception.printStackTrace();
+      return null;
+    });
+    return future;
+  }
+  public CompletableFuture<Void> deleteCategory(String categoryName) {
+    CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+      collection.deleteOne(Filters.eq("_id", categoryName));
+      return null;
+    });
+    future.exceptionally(exception -> {
+      exception.printStackTrace();
+      return null;
+    });
+    return future;
+  }
+  protected CompletableFuture<Set<Category>> fetchCategories() {
+    CompletableFuture<Set<Category>> future = CompletableFuture.supplyAsync(() -> {
+      FindIterable<Document> documents = collection.find();
+      Set<Category> categorySet = new HashSet<>();
+      documents.forEach(document -> {
+        Category category = new Category(
+            document.getString("_id"),
+            document.getString("description"),
+            document.getString("displayItem"),
+            document.getInteger("inventorySlot"),
+            document.getString("items")
+        );
+        categorySet.add(category);
+      });
+      return categorySet;
+    });
+    future.exceptionally(exception -> {
+      exception.printStackTrace();
+      return null;
+    });
+    return future;
+  }
 }
 

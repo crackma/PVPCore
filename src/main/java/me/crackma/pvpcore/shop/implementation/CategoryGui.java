@@ -1,19 +1,12 @@
 package me.crackma.pvpcore.shop.implementation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import me.crackma.pvpcore.PVPCorePlugin;
 import me.crackma.pvpcore.gui.Gui;
 import me.crackma.pvpcore.gui.GuiButton;
 import me.crackma.pvpcore.shop.Category;
 import me.crackma.pvpcore.shop.CategoryItem;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
 
 public class CategoryGui extends Gui {
     private PVPCorePlugin plugin;
@@ -31,12 +24,9 @@ public class CategoryGui extends Gui {
     public void decorate() {
         for (CategoryItem categoryItem : category.getItems()) {
             putButton(categoryItem.getInventorySlot(), new GuiButton().
-                creator(categoryItem.prepareForShop(1)).
-                leftConsumer(event -> {
-                    plugin.getShopManager().giveCategoryItem(categoryItem, event.getWhoClicked(), 1);
-                }).rightConsumer(event -> {
-                    plugin.getGuiManager().openGUI(new ItemGui(plugin, categoryItem), event.getWhoClicked());
-                }));
+                creator(categoryItem.prepareForShop(1))
+                .leftConsumer(event -> plugin.getShopManager().giveCategoryItem(categoryItem, event.getWhoClicked(), 1))
+                .rightConsumer(event -> plugin.getGuiManager().openGUI(new ItemGui(plugin, categoryItem), event.getWhoClicked())));
         }
         super.decorate();
     }
