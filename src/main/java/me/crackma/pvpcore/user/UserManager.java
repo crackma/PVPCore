@@ -73,8 +73,8 @@ public class UserManager {
     if (lastAttacker == null || lastAttacker == user) return;
     Stats attackerStats = lastAttacker.getStats();
     attackerStats.setKills(attackerStats.getKills() + 1);
-    int attackerStreak = attackerStats.getStreak();
-    attackerStats.setStreak(attackerStreak + 1);
+    int attackerStreak = attackerStats.getStreak() + 1;
+    attackerStats.setStreak(attackerStreak);
     if (attackerStreak > attackerStats.getBestStreak()) attackerStats.setBestStreak(attackerStreak);
     attackerStats.setGems(attackerStats.getGems() + 3);
     updateBoard(lastAttacker);
