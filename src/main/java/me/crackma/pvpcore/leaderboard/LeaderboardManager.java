@@ -34,9 +34,9 @@ public class LeaderboardManager {
     sortedKillsMap = new LinkedHashMap<>();
     sortedBestStreaksMap = new LinkedHashMap<>();
     sortedGemsMap = new LinkedHashMap<>();
-    killsGui = new LeaderboardGui("Kills leaderboard");
-    bestStreaksGui = new LeaderboardGui("Streaks leaderboard");
-    gemsGui = new LeaderboardGui("Gems leaderboard");
+    killsGui = new LeaderboardGui("Kills Leaderboard");
+    bestStreaksGui = new LeaderboardGui("Streaks Leaderboard");
+    gemsGui = new LeaderboardGui("Gems Leaderboard");
     new BukkitRunnable() {
       @Override
       public void run() {
@@ -47,8 +47,8 @@ public class LeaderboardManager {
   public void updateLeaderboard() {
     long start = System.currentTimeMillis();
     HashMap<UUID, Integer> unsortedKillsMap = new HashMap<>();
-    HashMap<UUID, Integer> unsortedGemsMap = new HashMap<>();
     HashMap<UUID, Integer> unsortedBestStreaksMap = new HashMap<>();
+    HashMap<UUID, Integer> unsortedGemsMap = new HashMap<>();
     plugin.getUserDatabase().getAllDocuments().thenAccept(iterable -> {
       Iterator iterator = iterable.iterator();
       while (iterator.hasNext()) {

@@ -3,6 +3,7 @@ package me.crackma.pvpcore.gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Setter;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -14,16 +15,16 @@ import lombok.Getter;
 
 @Getter
 public abstract class Gui {
-  private final Inventory inventory;
+  @Setter
+  protected Inventory inventory;
   private final Map<Integer, GuiButton> buttonMap = new HashMap<>();
-  public Gui() {
-    this.inventory = createInventory();
-  }
+  public Gui() { }
   public abstract Inventory createInventory();
   public void putButton(int slot, GuiButton button) {
     this.buttonMap.put(slot, button);
   }
   public void decorate() {
+    if (inventory == null) createInventory();
     this.buttonMap.forEach((slot, button) -> {
       if (slot > inventory.getSize() - 1) return;
       inventory.setItem(slot, button.getItemStack());

@@ -18,12 +18,11 @@ import me.crackma.pvpcore.shop.Category;
 public class ShopGui extends Gui {
     private PVPCorePlugin plugin;
     public ShopGui(PVPCorePlugin plugin) {
-        super();
         this.plugin = plugin;
     }
     @Override
     public Inventory createInventory() {
-    	return Bukkit.createInventory(null, (PVPCorePlugin.getInstance().getConfig().getInt("kit_gui_rows")) * 9);
+    	return Bukkit.createInventory(null, (plugin.getConfig().getInt("kit_gui_rows")) * 9, "Shop");
     }
     @Override
     public void decorate() {

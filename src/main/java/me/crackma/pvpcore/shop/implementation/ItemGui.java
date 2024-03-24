@@ -12,7 +12,6 @@ public class ItemGui extends Gui {
     private ShopManager shopManager;
     private final CategoryItem categoryItem;
     public ItemGui(PVPCorePlugin plugin, CategoryItem categoryItem) {
-        super();
         this.shopManager = plugin.getShopManager();
         this.categoryItem = categoryItem;
     }

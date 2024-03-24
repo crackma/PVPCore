@@ -22,13 +22,13 @@ public class LeaderboardSelectionGui extends Gui {
   @Override
   public void decorate() {
     putButton(11, new GuiButton()
-        .creator(Utils.itemStackCreator(Material.IRON_SWORD, "§dKills leaderboard"))
+        .creator(Utils.itemStackCreator(Material.IRON_SWORD, "§dKills Leaderboard"))
         .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getKillsGui(), event.getWhoClicked())));
     putButton(13, new GuiButton()
-        .creator(Utils.itemStackCreator(Material.SPECTRAL_ARROW, "§dBest streaks leaderboard"))
+        .creator(Utils.itemStackCreator(Material.SPECTRAL_ARROW, "§dStreak Leaderboard"))
         .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getBestStreaksGui(), event.getWhoClicked())));
     putButton(15, new GuiButton()
-        .creator(Utils.itemStackCreator(Material.AMETHYST_SHARD, "§dGems leaderboard"))
+        .creator(Utils.itemStackCreator(Material.AMETHYST_SHARD, "§dGems Leaderboard"))
         .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getGemsGui(), event.getWhoClicked())));
     super.decorate();
   }

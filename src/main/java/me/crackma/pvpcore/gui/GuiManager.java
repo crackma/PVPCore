@@ -12,12 +12,13 @@ import java.util.Map;
 public class GuiManager {
   private Map<Inventory, Gui> guiMap = new HashMap<>();
   public void openGUI(Gui gui, HumanEntity player) {
+    gui.setInventory(gui.createInventory());
     Inventory inventory = gui.getInventory();
     addGui(inventory, gui);
     player.openInventory(inventory);
   }
-  public void addGui(Inventory inventory, Gui guiInterface) {
-    guiMap.put(inventory, guiInterface);
+  public void addGui(Inventory inventory, Gui gui) {
+    guiMap.put(inventory, gui);
   }
   public void onOpen(InventoryOpenEvent event) {
     Inventory inventory = event.getInventory();
