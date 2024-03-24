@@ -22,21 +22,21 @@ public class LeaderboardManager {
   @Getter
   private LeaderboardGui killsGui;
   @Getter
-  private LinkedHashMap<UUID, Integer> sortedGemsMap;
-  @Getter
-  private LeaderboardGui gemsGui;
-  @Getter
   private LinkedHashMap<UUID, Integer> sortedBestStreaksMap;
   @Getter
   private LeaderboardGui bestStreaksGui;
+  @Getter
+  private LinkedHashMap<UUID, Integer> sortedGemsMap;
+  @Getter
+  private LeaderboardGui gemsGui;
   public LeaderboardManager(PVPCorePlugin plugin) {
     this.plugin = plugin;
     sortedKillsMap = new LinkedHashMap<>();
-    sortedGemsMap = new LinkedHashMap<>();
     sortedBestStreaksMap = new LinkedHashMap<>();
-    killsGui = new LeaderboardGui();
-    gemsGui = new LeaderboardGui();
-    bestStreaksGui = new LeaderboardGui();
+    sortedGemsMap = new LinkedHashMap<>();
+    killsGui = new LeaderboardGui("Kills leaderboard");
+    bestStreaksGui = new LeaderboardGui("Streaks leaderboard");
+    gemsGui = new LeaderboardGui("Gems leaderboard");
     new BukkitRunnable() {
       @Override
       public void run() {
@@ -54,18 +54,18 @@ public class LeaderboardManager {
       while (iterator.hasNext()) {
         Document document = (Document) iterator.next();
         UUID uuid = UUID.fromString(document.getString("_id"));
-        unsortedKillsMap.put(uuid, document.getInteger("kills"));
-        unsortedGemsMap.put(uuid, document.getInteger("gems"));
-        unsortedBestStreaksMap.put(uuid, document.getInteger("bestStreak"));
+        unsortedKillsMap.put(uuid, (int)document.getOrDefault("kills", 0));
+        unsortedBestStreaksMap.put(uuid, (int)document.getOrDefault("bestStreak", 0));
+        unsortedGemsMap.put(uuid, (int)document.getOrDefault("gems", 0));
       }
-      sortAndUpdate(killsGui, "kills", unsortedKillsMap, sortedKillsMap);
-      sortAndUpdate(gemsGui, "gems", unsortedGemsMap, sortedGemsMap);
-      sortAndUpdate(bestStreaksGui, "best streak", unsortedBestStreaksMap, sortedBestStreaksMap);
+      sortAndUpdate(killsGui, unsortedKillsMap, sortedKillsMap);
+      sortAndUpdate(bestStreaksGui, unsortedBestStreaksMap, sortedBestStreaksMap);
+      sortAndUpdate(gemsGui, unsortedGemsMap, sortedGemsMap);
       long end = System.currentTimeMillis();
       Bukkit.getLogger().info("Updated leaderboard in " + (end - start) + " ms.");
     });
   }
-  private void sortAndUpdate(LeaderboardGui gui, String statName, HashMap<UUID, Integer> unsortedMap, HashMap<UUID, Integer> sortedMap) {
+  private void sortAndUpdate(LeaderboardGui gui, HashMap<UUID, Integer> unsortedMap, HashMap<UUID, Integer> sortedMap) {
     sortedMap.clear();
     unsortedMap.entrySet()
         .stream()
@@ -85,13 +85,13 @@ public class LeaderboardManager {
       skullMeta.setOwnerProfile(playerProfile);
       int inventorySlot = plugin.getConfig().getInt("leaderboardrankincorrespondancetotheinventoryslot." + leaderboardPosition);
       if (offlinePlayer.hasPlayedBefore()) {
-        skullMeta.setDisplayName("§e§l#" + leaderboardPosition + " §f" + offlinePlayer.getName() + " §8(" + entry.getValue() + " " + statName + ")");
+        skullMeta.setDisplayName("§e§l#" + leaderboardPosition + " §f" + offlinePlayer.getName() + " §8(" + entry.getValue() + ")");
         skull.setItemMeta(skullMeta);
         gui.putButton(inventorySlot, new GuiButton().creator(skull));
       } else {
         int finalLeaderboardPosition = leaderboardPosition;
         playerProfile.update().thenAccept(updatedPlayerProfile -> {
-          skullMeta.setDisplayName("§e§l#" + finalLeaderboardPosition + " §f" + updatedPlayerProfile.getName() + " §8(" + entry.getValue() + " " + statName + ")");
+          skullMeta.setDisplayName("§e§l#" + finalLeaderboardPosition + " §f" + updatedPlayerProfile.getName() + " §8(" + entry.getValue() + ")");
           skull.setItemMeta(skullMeta);
           gui.putButton(inventorySlot, new GuiButton().creator(skull));
         });

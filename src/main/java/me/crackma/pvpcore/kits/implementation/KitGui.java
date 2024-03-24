@@ -14,7 +14,7 @@ public class KitGui extends Gui {
   }
   @Override
   public Inventory createInventory() {
-    return Bukkit.createInventory(null, 27);
+    return Bukkit.createInventory(null, 27, "Kit " + kit.getName());
   }
   @Override
   public void decorate() {

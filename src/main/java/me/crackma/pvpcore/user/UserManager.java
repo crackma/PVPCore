@@ -73,11 +73,13 @@ public class UserManager {
     if (lastAttacker == null || lastAttacker == user) return;
     Stats attackerStats = lastAttacker.getStats();
     attackerStats.setKills(attackerStats.getKills() + 1);
-    attackerStats.setStreak(attackerStats.getStreak() + 1);
+    int attackerStreak = attackerStats.getStreak();
+    attackerStats.setStreak(attackerStreak + 1);
+    if (attackerStreak > attackerStats.getBestStreak()) attackerStats.setBestStreak(attackerStreak);
     attackerStats.setGems(attackerStats.getGems() + 3);
     updateBoard(lastAttacker);
     if (!(lastAttacker instanceof HumanEntity)) ((HumanEntity)lastAttacker.getOfflinePlayer()).sendMessage("§eYou killed §d" + victim.getName() + " §eand got §d3 gems§e.");
-    if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + lastAttacker.getOfflinePlayer().getName() + " §eis on a streak of §d" + attackerStats.getStreak() + "§e.");
+    if (attackerStats.getStreak() % 5 == 0) Bukkit.broadcastMessage("§d" + lastAttacker.getOfflinePlayer().getName() + " §eis on a streak of §d" + attackerStreak + "§e.");
     userDatabase.updateOne(lastAttacker);
     Set<User> allAttackers = user.getAllAttackers();
     if (allAttackers != null) {

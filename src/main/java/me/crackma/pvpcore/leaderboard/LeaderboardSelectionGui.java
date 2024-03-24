@@ -17,7 +17,7 @@ public class LeaderboardSelectionGui extends Gui {
   }
   @Override
   public Inventory createInventory() {
-    return Bukkit.createInventory(null, 27);
+    return Bukkit.createInventory(null, 27, "Leaderboard");
   }
   @Override
   public void decorate() {
@@ -25,11 +25,11 @@ public class LeaderboardSelectionGui extends Gui {
         .creator(Utils.itemStackCreator(Material.IRON_SWORD, "§dKills leaderboard"))
         .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getKillsGui(), event.getWhoClicked())));
     putButton(13, new GuiButton()
+        .creator(Utils.itemStackCreator(Material.SPECTRAL_ARROW, "§dBest streaks leaderboard"))
+        .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getBestStreaksGui(), event.getWhoClicked())));
+    putButton(15, new GuiButton()
         .creator(Utils.itemStackCreator(Material.AMETHYST_SHARD, "§dGems leaderboard"))
         .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getGemsGui(), event.getWhoClicked())));
-    putButton(15, new GuiButton()
-        .creator(Utils.itemStackCreator(Material.SPECTRAL_ARROW, "§dBest streak leaderboard"))
-        .leftConsumer(event -> guiManager.openGUI(leaderboardManager.getBestStreaksGui(), event.getWhoClicked())));
     super.decorate();
   }
 }

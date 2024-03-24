@@ -21,7 +21,7 @@ public class KitsGui extends Gui {
   }
   @Override
   public Inventory createInventory() {
-    return Bukkit.createInventory(null, (PVPCorePlugin.getInstance().getConfig().getInt("kit_gui_rows")) * 9);
+    return Bukkit.createInventory(null, (PVPCorePlugin.getInstance().getConfig().getInt("kit_gui_rows")) * 9, "Kits");
   }
   @Override
   public void decorate() {

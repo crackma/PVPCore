@@ -83,7 +83,7 @@ public class UserDatabase {
       document.put("kills", stats.getKills());
       document.put("deaths", stats.getDeaths());
       document.put("streak", stats.getStreak());
-      document.put("bestStreak", stats.getStreak());
+      document.put("bestStreak", stats.getBestStreak());
       document.put("gems", stats.getGems());
       document.put("kitCooldowns", stats.getCooldownMapAsString());
       collection.replaceOne(eq(user.getUniqueId().toString()), document);

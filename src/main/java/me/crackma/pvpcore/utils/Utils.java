@@ -38,7 +38,7 @@ public class Utils {
         if (minutes > 0) date = date + minutes + "m ";
         long seconds = duration.getSeconds() % 60;
         if (seconds > 0) date = date + seconds + "s";
-        return date;
+        return date.trim();
     }
     public static ItemStack itemStackCreator(Material material, String name) {
         ItemStack itemStack = new ItemStack(material);

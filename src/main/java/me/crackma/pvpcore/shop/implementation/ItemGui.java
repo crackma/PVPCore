@@ -18,7 +18,7 @@ public class ItemGui extends Gui {
     }
     @Override
     public Inventory createInventory() {
-        return Bukkit.createInventory(null, 27);
+        return Bukkit.createInventory(null, 27, categoryItem.getName());
     }
     @Override
     public void decorate() {
